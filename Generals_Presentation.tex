@@ -22,7 +22,7 @@
 %\usetheme{Bergen}
 %\usetheme{Berkeley}
 %\usetheme{Berlin}
-%\usetheme{Boadilla}
+%\usetheme{Boadilla} %Not bad
 %\usetheme{boxes}
 %\usetheme{CambridgeUS}
 %\usetheme{Copenhagen}
@@ -65,12 +65,12 @@
 % - Use the \inst command only if there are several affiliations.
 % - Keep it simple, no one is interested in your street address.
 
-\date{Generals Exam, May 4 2017}
+\date{Generals, May 4 2017}
 % - Either use conference name or its abbreviation.
 % - Not really informative to the audience, more for people (including
 %   yourself) who are reading the slides online
 
-\subject{Theoretical Computer Science}
+%\subject{Theoretical Computer Science}
 % This is only inserted into the PDF information catalog. Can be left
 % out. 
 
@@ -271,28 +271,80 @@
 \begin{frame}{State of the Art: Mean Field Games}{Existence \& Uniqueness}
 	\begin{itemize}
 		\item {
-			My first point.
+			Cauchy-Lipschitz theory only holds for small T.
 		}
 		\item {
-			My second point.
+			Existence
+			\begin{itemize}
+				\item In general, need Lipschitz coefficients and cost functions, non-degenerate diffusion coefficient.
+				\item Relies on Schauder's Fixed Point Theorem.
+			\end{itemize}
 		}
+		\item {
+			Uniqueness
+			\begin{itemize}
+				\item Assumming no common noise, in general, need monotone cost functions.
+				\begin{itemize}
+				\item Lasry Lions Monotonicity
+				\item $L$-Monotonicity
+				\end{itemize}
+			\end{itemize}
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{State of the Art: Mean Field Games}{Some Results}
+	\begin{itemize}
+		\item {
+			Linear-Quadratic Games.
+		}
+		\begin{itemize}
+			\item Stochastic maximum approach leads to matrix Ricatti equation.
+		\end{itemize}
+		\item Some results when cost is local.
+		\begin{itemize}
+			\item Cost is local and linear: Swiecicki et. al. \textit{An [imaginary time] Schr{\"o}dinger approach to mean field games.}
+		\end{itemize}
+		\item With common noise: Cardaliaguet et. al. \textit{The master equation and the convergence problem in mean field games.}
+		\item Nonlocal cost of particular form: Graber \& Bensoussan \textit{Existence and Uniqueness of Solutions for Betrand and Cournot mean field games.}
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{State of the Art: Mean Field Games}{Open Problems}
 	\begin{itemize}
 		\item {
-			My first point.
+			More general existence and uniqueness results.
 		}
 		\item {
-			My second point.
+			Problems with non-convex cost functions.
+		}
+		\item {
+			Problems with non-local cost functions.
 		}
 	\end{itemize}
 \end{frame}
 
 \subsection{Flocking: Previous Work}
 
-\begin{frame}{State of the Art: Flocking}{Problem Formulations}
+\begin{frame}{State of the Art: Flocking}{Previous Work}
+	Cucker-Smale (CS)
+	\begin{equation}
+				\begin{split}
+				x'_i(t)&=v_i(t)\\
+				v'_i(t)&=\frac{1}{N}\sum_{j=1}^N\frac{v_j(t)-v_i(t)}{(1+\Vert x_j(t)-x_i(t) \Vert^2)^\beta}
+				\end{split}
+	\end{equation}
+	\begin{itemize}
+		\item {
+			Unconditional flocking when $\beta < 1/2$.
+		}
+		\item {
+			When $\beta \geq 1/2$, flocking occurs for sufficiently small values of $\sum_{i \neq j}\Vert x_i(0)-x_j(0)\Vert^2$ and $\sum_{i \neq j}\Vert v_i(0)-v_j(0)\Vert^2$.
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{State of the Art: Flocking}{Aside on $\beta$ Parameter}
 	\begin{itemize}
 		\item {
 			My first point.
@@ -304,30 +356,132 @@
 \end{frame}
 
 \begin{frame}{State of the Art: Flocking}{Previous Work}
-	Cucker-Smale
-	\begin{equation}
-				\begin{split}
-				dx_t&=v_tdt\\
-				dv_t&=\alpha_t dt %ToDo
-				\end{split}
-	\end{equation}
+	Kinetic CS (Ha and Tadmor)
 	\begin{itemize}
 		\item {
-			My first point.
+			Mean field limit of CS.
 		}
 		\item {
-			My second point.
+			PDE of McKean-Vlasov type:
+		}
+		\begin{equation}
+		\partial t \mu_t+v \partial_x \mu_t+\partial_v \left[\xi (x,v,\mu_t) \mu_t \right]=0
+		\end{equation}
+		where
+		\begin{equation}
+		\xi (x,v,\mu_t)=\int_{\mathbb{R}^{2d}} \frac{v'-v}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv'
+		\end{equation}
+	\end{itemize}
+	Results
+	\begin{itemize}
+		\item For compactly supported $\mu_0(x,v)$, time-asymptotic flocking when $\beta \leq 1/4$ (later extended to $\beta \leq 1/2$ by Ha and Liu).
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{State of the Art: Flocking}{Previous Work}
+	Normalized Weights Kinetic CS (?)
+	\begin{itemize}
+		\item {
+			Normalize weights so that the control is a true weighted average of $v'-v$.
+		}
+		\item {
+			PDE of McKean-Vlasov type:
+		}
+		\begin{equation}
+		\partial t \mu_t+v \partial_x \mu_t-v \partial_v \mu_t-\mu_t+\phi (x,\mu_t)\partial_v \mu_t=0
+		\end{equation}
+		where
+		\begin{equation}
+		\phi (x,\mu_t)=\frac{\int_{\mathbb{R}^{2d}} \frac{v'}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv'}{\int_{\mathbb{R}^{2d}} \frac{1}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv}
+		\end{equation}
+	\end{itemize}
+	Results???
+\end{frame}
+
+
+
+\begin{frame}{State of the Art: Flocking}{Previous Work}
+	Mean Field Game Analog of CS (Nourian, Caines, and Malhalm\'{e})
+				\begin{equation}
+				\begin{split}
+				dx(t)&=v(t)dt\\
+				dv(t)&=\alpha_tdt+\sigma dW
+				\end{split}
+				\end{equation}
+				Where $\alpha$ is chosen to minimize:
+				\begin{equation}
+				\begin{split}
+				J(\alpha)&=\limsup_{T \rightarrow \infty} \frac{1}{T} \int_0^T \Psi(x,v,\mu_t)+\alpha_t^2 dt \\
+				\Psi(x,v,\mu_t)&=\Vert\int_{\mathbb{R}^{2d}}\frac{v'-v}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv' \Vert^2
+				\end{split}
+				\end{equation}
+	Results:
+	\begin{itemize}
+		\item {
+			Exact solution when $\beta=0$. (Linear Quadratic Game.)
+		}
+		\item {
+			As $t\rightarrow \infty$, $v \sim N(\bar{v}_0,\sigma^2/2)$
 		}
 	\end{itemize}
+\end{frame}
+
+\begin{frame}{State of the Art: Flocking}{Previous Work Summary}
+	Finitely many birds, no optimization:
+	\begin{center}
+	\begin{tabular}{|c|c|c|}
+	 \hline
+	 Authors & Noise & Interaction Type  \\ \hline
+	 Cucker, Smale 2007& no & spatial weights \\ \hline
+	 Ha, Liu 2009& no&spatial weights \\ \hline
+	 Martin, Girard 2010 & no&unweighted $(\Vert x'-x\Vert^2 <R)$ \\ \hline
+	 Cucker, Dong 2010 & no&spatial weights \& repulsion \\ \hline
+	 Cucker, Mordecki 2008 & yes&spatial weights \\ \hline
+	 Ha, Lee, Levy 2009 & yes&spatial weights \\ \hline
+	 Ton, Linh, Yagi 2015 & yes& noisy spatial weights \\
+	 \hline
+	\end{tabular}
+	\end{center}
+\end{frame}
+
+\begin{frame}{State of the Art: Flocking}{Previous Work Summary}
+	Justification of Mean Field Limit (still no optimization):
+	\begin{center}
+		\begin{tabular}{|c|c|c|}
+			\hline
+			Authors & Noise & Result  \\ \hline
+			Ha, Tadmor 2008& no & flocking for initially compact data \\ \hline
+			Carrillo, et. al. 2010& no & exponentially fast flocking \\ \hline
+			Bolley, Ca\~nizo, Carrillo 2010 & yes& existence and uniqueness \\
+			\hline
+		\end{tabular}
+	\end{center}
+	All of these results are for the spatial weights.
+\end{frame}
+
+\begin{frame}{State of the Art: Flocking}{Previous Work Summary}
+	Mean field:
+	\begin{center}
+		\begin{tabular}{|c|c|c|}
+			\hline
+			Authors & Noise & Interaction Type  \\ \hline
+			Ca\~nizo, et. al. 2010& no & spatial weights \& A/R \\ \hline
+			Karper, et. al. 2013& yes & spatial weights \\
+			& & existence of weak solutions \\ \hline
+			Piccoli, et. al. 2015& no & spatial weights \& sparse external force \\ \hline
+			Barbaro, et. al. 2016& yes & normalized spatial weights \& A/R \\
+			& & results only for $\beta=0$ \\ \hline
+			Nourian, et. al. 2010 & yes& optimization (MFG), spatial weights \\
+			& & results only for $\beta=0$ \\
+			\hline
+		\end{tabular}
+	\end{center}
 \end{frame}
 
 \begin{frame}{State of the Art: Flocking}{Open Problems}
 	\begin{itemize}
 		\item {
-			My first point.
-		}
-		\item {
-			My second point.
+			Noisy Kinetic or MFG analog of CS Flocking when $\beta > 0$, with and without normalized spatial weights.
 		}
 	\end{itemize}
 \end{frame}
@@ -339,10 +493,40 @@
 \begin{frame}{Flocking Problem Formulation}
 	\begin{itemize}
 		\item {
-			My first point.
+			For now, consider the MFG formulation of Nourian et. al. but with finite horizon T.
+		}
+						\begin{equation}
+						\begin{split}
+						dx(t)&=v(t)dt\\
+						dv(t)&=\alpha_tdt+\sigma dW
+						\end{split}
+						\end{equation}
+						Where $\alpha$ is chosen to minimize:
+						\begin{equation}
+						\begin{split}
+						J(\alpha)&=\mathbb{E} \int_0^T \Psi(x,v,\mu_t)+\alpha_t^2 dt \\
+						\Psi(x,v,\mu_t)&=\Vert\int_{\mathbb{R}^{2d}}\frac{v'-v}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv' \Vert^2
+						\end{split}
+						\end{equation}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Flocking Problem Formulation}
+	\begin{itemize}
+		\item {
+			For now, consider the MFG formulation of Nourian et. al. but with finite horizon T.
 		}
 		\item {
-			My second point.
+			The solution is given by the HJB and Kolmogorov equations:
+			\begin{equation}
+			\begin{split}
+			\partial_t V+\frac{\sigma^2}{2}\partial^2_{vv} V+ v \partial_x V+ \alpha \partial_v V+\alpha^2+\Psi(x,v,\mu)&=0 \\
+			V(T,x,v)&=0 \\
+			\partial_t \mu_t-\frac{\sigma^2}{2}\partial^2_{vv} \mu_t + v \partial_x \mu_t +div_v(\alpha_t \mu_t) &=0 \\
+			\mu(0,x,v)=\mu^0(x,v)& \\
+			\alpha=-\frac{1}{2}\partial_v V&
+			\end{split}
+			\end{equation}
 		}
 	\end{itemize}
 \end{frame}
@@ -350,57 +534,337 @@
 \subsection{Deriving Stable Scheme \& Boundary Conditions}
 
 \begin{frame}{Numerical Approach}
+		\begin{itemize}
+			\item {
+				To solve numerically, one common method is finite differences.
+			}
+			\item {
+				The unknown function, $f$, will be approximated on a lattice of points:
+				\begin{equation}
+				f(t_i,x_j) \approx f(i \cdot \Delta t,j \cdot \Delta x)
+				\end{equation}
+			}
+			\item {
+				All derivatives are replaced by finite differences.
+			}
+			\item {
+				For example, the heat equation:
+				\begin{equation}
+				\partial_t f= \partial_{xx}^2 f
+				\end{equation}
+			}
+			\item {
+				becomes:
+				\begin{equation}
+				\frac{f(t_{i+1},x)-f(t_i,x)}{\Delta t}=\frac{f(t_i,x_{j+1})-2f(t_i,x_j)+f(t_i,x_{j-1})}{\Delta x^2}
+				\end{equation}
+			}
+		\end{itemize}
+\end{frame}
+
+\begin{frame}{Numerical Approach, continued}
+	Following the analytic approach, our numerical approach is the following:
+	\begin{itemize}
+			\item {
+				Goal: find grid functions $V(t_k,x_i,v_j)$ and $\mu_{t_k}(x_i,v_j)$ solving finite difference equations for HJB and Kolmogorov.
+			}
+			\item {
+				Step 0: start with some guess for $\mu=(\mu_{t_k}(x_i,v_j))_{0 \leq t_k \leq T}$
+			}
+			\item {
+				Step 1: Given $\mu$ and $V(T,x)$, solve finite difference HJB explicitly backwards in time for $V$, which gives us optimal $\alpha$.
+			}
+			\item {
+				Step 2: Given $\alpha$ and $\mu^0$, solve finite difference Kolmogorov explicitly forwards in time for $\mu '$.
+			}
+			\item {
+				Repeat Steps 1 and 2 until $\mu \approx \mu '$.
+			}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Numerical Approach: Complications}
+		\begin{itemize}
+			\item {
+				Curse of dimensionality: number of lattice points grows exponentially with the dimension of the state space.
+				
+			}
+			\item {
+				Stability: $\Delta t$ can't be too big (CFL condition).
+				\begin{center}
+					$\Delta x$ smaller and b (drift) larger $\implies$ need smaller $\Delta t$.
+				\end{center}
+			}
+			\item {
+				Accuracy: use upwind scheme for 1st order spatial derivatives
+			}
+			\item {
+				What boundary conditions should be used?
+			}
+		\end{itemize}
+\end{frame}
+
+	\begin{frame}{Numerical Approach: Stability and Accuracy}
+		\begin{itemize}
+			\item CFL condition:
+			\begin{equation} 
+			\Delta t \leq \frac{1}{2(\frac{\sigma^2}{\Delta x^2}+\frac{|b|}{\Delta x})}
+			\end{equation}
+			\item Upwind scheme:
+			\begin{equation}
+			[Lf]=b \cdot \frac{\partial f}{\partial x} + \frac{\sigma^2}{2}\frac{\partial^2 f}{\partial x^2}
+			\end{equation}
+			\begin{equation}
+			[Lf](i)=\sum_{j} L(i,j) f(x_j)
+			\end{equation}
+			Choose forward or backward differences such that:
+			\begin{enumerate}
+				\item $L(i,j)\geq 0$ when $i \neq j$.
+				\item $L(i,i)=-\sum_{j\neq i} L(i,j)$
+			\end{enumerate}
+			
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Numerical Approach: Upwind Scheme}
+		For example:
+		\begin{equation}
+		\left[b \cdot \frac{\partial f}{\partial x} \right](x_i)=b^{+} \cdot \frac{f(x_{i+1})-f(x_i)}{\Delta x}-b^{-} \cdot \frac{f(x_{i})-f(x_{i-1})}{\Delta x}
+		\end{equation}
+		\begin{equation}
+		L(i,i+1)=b^{+} \cdot \frac{1}{\Delta x} \geq 0
+		\end{equation}
+		\begin{equation}
+		L(i,i-1)=-b^{-} \cdot \frac{-1}{\Delta x} \geq 0
+		\end{equation}
+		\begin{equation}
+		L(i,i)=b^{+} \cdot \frac{-1}{\Delta x}-b^{-} \cdot \frac{1}{\Delta x} = -[L(i,i+1)+L(i,i-1)]
+		\end{equation}
+	\end{frame}
+	
+	\begin{frame}{Numerical Approach: Stability of $\mu$}
+		\begin{itemize}
+			\item CFL + Upwind $\rightarrow$ Solution to Kolmogorov is a prob. measure, i.e.
+			\begin{equation}
+			\begin{split}
+			\mu(t_n,x_i) & \geq 0 \\
+			\sum_i \mu(t_n,x_i) &= 1
+			\end{split}
+			\end{equation}
+			\item Proof:
+			\begin{equation}
+			\frac{\mu(t_{n+1},x_i)-\mu(t_{n},x_i)}{\Delta t}=\sum_{j} L(j,i) \mu(t_n,x_j)
+			\end{equation}
+			\begin{equation}
+			\begin{split}
+			\mu(t_{n+1},x_i)&=\mu(t_{n},x_i)+ \Delta t \cdot L(i,i)\mu(t_n,x_i) + \Delta t \cdot \sum_{j\neq i} L(j,i) \mu(t_n,x_j)  \\
+			& \geq \mu(t_{n},x_i) (1+ \Delta t \cdot L(i,i))
+			\end{split}
+			\end{equation}
+			$\mu(t_{n+1},x_i) \geq 0$ if $\Delta t \cdot| L(i,i)| \leq 1$ (CFL Condition)
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Numerical Approach: Stability of $\mu$ (continued)}
+		\begin{equation}
+		\begin{split}
+		\sum_i \mu(t_{n+1},x_i)=& \sum_i \mu(t_{n},x_i)+\Delta t \cdot \sum_i \sum_{j} L(j,i) \mu(t_n,x_j) \\
+		& = 1 + \Delta t \cdot \sum_j \Big(\sum_i L(j,i)\Big) \mu(t_n,x_j) \\
+		& = 1
+		\end{split}
+		\end{equation}
+	\end{frame}
+
+\begin{frame}{Numerical Approach: Boundary Behavior}
 	\begin{itemize}
 		\item {
-			My first point.
+			The domain of the original problem (in 1 dimension) is $\mathbb{R}^{2d}$. For numerics, we are restricted to a finite domain.
 		}
 		\item {
-			My second point.
+			Let the domain of $v$ be $D_v =[-v_{max},v_{max}]$.
+			ToDo: less text
+			\begin{itemize}
+				\item If birds were 'killed' at the boundary, the total mass of the system would decrease in time, which is undesirable.
+				\item If the boundary was periodic, then birds that have a large positive velocity would be replaced by birds with a large negative velocity, which is unrealistic.
+				\item Intuitively, if a bird reaches a physical upper limit on it's velocity, it would have to decrease it's velocity. Thus, we choose reflecting boundary conditions at the boundary $\partial D_v$.
+				\item Nonetheless, $v_{max}$ will be chosen large enough such that only a small amount of the total mass can reach the boundary $\partial D_v$, limiting the effect of our choice of boundary condition for $\partial D_v$.
+			\end{itemize}
 		}
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Stability \& Boundary Conditions}
+\begin{frame}{Numerical Approach: Boundary Behavior, continued}
 	\begin{itemize}
 		\item {
-			My first point.
+			Let $R \in \mathbb{R}$ such that $x_0 \in [-R,R]$ for all birds. Then $x_t \in [-R-Ty_{ax},R+T y_{max}]$ $\forall t$.
 		}
 		\item {
-			My second point.
+			Let the domain of $x$ be $D_x =[-R-Ty_{max}-\epsilon,R+T y_{max}+\epsilon]$. Then no birds will ever reach the boundary $\partial D_x$. Thus, the choice of boundary condition for $\partial D_x$ should not affect these results, and we can arbitrarily choose reflecting boundary conditions for $\partial D_x$.
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Numerical Approach: Boundary Conditions}
+	\begin{itemize}
+		\item {
+			Now that we have established boundary behavior, we need to establish boundary conditions for the HJB and Kolmogorov equations.
+		}
+		\item {
+			Reflecting on the boundaries corresponds to a von Neumann boundary condition for the HJB:
+			\begin{equation}
+			\begin{split}
+			\partial_v V(t,x,y_{min})&=0 \\
+			\partial_v V(t,x,y_{max})&=0 \\
+			\partial_x V(t,x_{min},y)&=0 \\
+			\partial_x V(t,x_{max},y)&=0
+			\end{split}
+			\end{equation}
+		}
+		\item {
+			We also need an approximation for $\partial^2_{vv} V(t,x,y)$ for $y=y_{min},y_{max}$.
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Numerical Approach: Boundary Conditions, continued}
+	\begin{itemize}
+		\item {
+			By making the approximation $V(t,x,y_{min}-\Delta v) \approx V(t,x,y_{min}+\Delta v)$ (based on the von Neumann boundary), we can approximate:
+			\begin{equation}
+				\partial^2_{vv} V(t,x,y_{min})\approx \frac{2V(t,x,y_{min}+\Delta v)-2V(t,x,y_{min})}{\Delta v^2}
+			\end{equation}
+			and similarly for $y_{max}$.
+		}
+		\item {
+			Now, we have fully specified the discrete operator $L$ such that the finite difference HJB equation is given by:
+			\begin{equation}
+			\partial_t V+L[V]=0
+			\end{equation}
+		}
+		\item {
+			The boundary conditions for the finite difference Kolmogorov equation are already determined by our choice for $L$:
+			\begin{equation}
+			\partial_t \mu_t=L^*[\mu_t]
+			\end{equation}
 		}
 	\end{itemize}
 \end{frame}
 
 \subsection{Numerical Results}
 
-\begin{frame}{Numerical Results}
+\begin{frame}{Numerical Results}{MFG of flocking, unnormalized weights}
 	\begin{itemize}
 		\item {
-			My first point.
+			ToDo: show variance increases with t for $\beta >0$.
 		}
 		\item {
-			My second point.
+			Lead into motivation for using normalized weights
 		}
 	\end{itemize}
 \end{frame}
+
+\begin{frame}{Numerical Results}{MFG of flocking, normalized weights}
+	\begin{itemize}
+		\item {
+			ToDo: show variance decreases/stabilizes
+		}
+		\item {
+			Explain how the relationship of variance with $\beta$, $\lambda$, and $\sigma$ is not clear. To simplify the problem, let's return to the Kinetic-CS model. (Question: does variance increase for unnormalized Kinetic-CS? Not sure if I ever ran this.)
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Numerical Results}{Kinetic-CS flocking, normalized weights}
+	\begin{itemize}
+		\item {
+			ToDo: show variance goes to $\sigma^2/2$.
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Numerical Results}{Verifying Code}
+	\begin{itemize}
+		\item {
+			ToDo: search 'verify' in Notes
+		}
+		\item {
+			Mass is conserved. Mass is nonnegative. (Put in better wording and using equations)
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Conjecture}
+	\begin{block}{Conjecture}
+		For $\mu_0(x,v)$ with compact support, the solution to noisy Kinetic Cucker-Smale flocking with normalized weights has the following time-asymptotic behavior:
+			\begin{equation}
+			\lim_{t \rightarrow \infty} Var(v_t)=\frac{\sigma^2}{2} 
+			\end{equation}
+			Or equivalently,
+			\begin{equation}
+			\lim_{t \rightarrow \infty} \mathbb{E}(v_t-\mathbb{E}v_t)^2=\frac{\sigma^2}{2}
+			\end{equation}
+	\end{block}
+\end{frame}
+
 \subsection{Analytical Progress}
 
-\begin{frame}{Analytical Progress}
+\begin{frame}{Analytical Progress}{Direct Calculation}
 	\begin{itemize}
 		\item {
-			My first point.
+			ToDo: g(t) going to 0, lose paper in blue book.
 		}
 		\item {
 			My second point.
 		}
 	\end{itemize}
 \end{frame}
+
+\begin{frame}{Analytical Progress}{Expansion}
+	\begin{itemize}
+		\item {
+			ToDo: Motivate small $\beta$
+		}
+		\item {
+			Assume $\mu_0(x,v)$ is symmetric about some $(\bar x_0,\bar v_0)$
+		}
+		\item {
+			Show that without loss of generality, can assume $(\bar x_0,\bar v_0)=(0,0)$ (because can translate solution by $(t\bar v_0,\bar v_0))$
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Analytical Progress}{Expansion, continued}
+	\begin{itemize}
+		\item {
+			ToDo: Show expansion and 0th and 1st order systems.
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Analytical Progress}{Expansion Summary}
+	\begin{itemize}
+		\item {
+			ToDo: Show general strategy for building solution
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Analytical Progress}{Expansion: General Initial Condition}
+	\begin{itemize}
+		\item {
+			ToDo: Show problem term that keeps us from using the approach from before
+		}
+	\end{itemize}
+\end{frame}
+
 
 \section{Future Directions}
 
 \subsection{Numerics}
 
-\begin{frame}{Future Directions}{Numerics}
+\subsection{Ideas for Proving Conjecture}
+
+\begin{frame}{Future Directions}{Ideas for Proving Conjecture}
 	\begin{itemize}
 		\item {
 			My first point.
@@ -411,9 +875,7 @@
 	\end{itemize}
 \end{frame}
 
-\subsection{Ideas for Proving Conjecture}
-
-\begin{frame}{Future Directions}{Ideas for Proving Conjecture}
+\begin{frame}{Future Directions}{Numerics}
 	\begin{itemize}
 		\item {
 			My first point.
