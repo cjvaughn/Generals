@@ -1,0 +1,1052 @@
+% Copyright 2004 by Till Tantau <tantau@users.sourceforge.net>.
+%
+% In principle, this file can be redistributed and/or modified under
+% the terms of the GNU Public License, version 2.
+%
+% However, this file is supposed to be a template to be modified
+% for your own needs. For this reason, if you use this file as a
+% template and not specifically distribute it as part of a another
+% package/program, I grant the extra permission to freely copy and
+% modify this file as you see fit and even to delete this copyright
+% notice. 
+
+\documentclass{beamer}
+
+% There are many different themes available for Beamer. A comprehensive
+% list with examples is given here:
+% http://deic.uab.es/~iblanes/beamer_gallery/index_by_theme.html
+% You can uncomment the themes below if you would like to use a different
+% one:
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla} %Not bad
+%\usetheme{boxes}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{default}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\title{Numerical Solutions to Mean Field Games}
+
+% A subtitle is optional and this may be deleted
+\subtitle{Models of Consensus}
+
+%\author{Christy Graves}
+\author[Christy Graves]{Christy Graves\\{\small Advisor: Ren\'{e} Carmona}}
+% - Give the names in the same order as the appear in the paper.
+% - Use the \inst{?} command only if the authors have different
+%   affiliation.
+
+\institute[Princeton University] % (optional, but mostly needed)
+{
+	Program in Applied and Computational Mathematics\\
+	Princeton University
+}
+% - Use the \inst command only if there are several affiliations.
+% - Keep it simple, no one is interested in your street address.
+
+\date{Generals, May 4 2017}
+% - Either use conference name or its abbreviation.
+% - Not really informative to the audience, more for people (including
+%   yourself) who are reading the slides online
+
+%\subject{Theoretical Computer Science}
+% This is only inserted into the PDF information catalog. Can be left
+% out. 
+
+% If you have a file called "university-logo-filename.xxx", where xxx
+% is a graphic format that can be processed by latex or pdflatex,
+% resp., then you can add a logo as follows:
+
+% \pgfdeclareimage[height=0.5cm]{university-logo}{university-logo-filename}
+% \logo{\pgfuseimage{university-logo}}
+
+% Delete this, if you do not want the table of contents to pop up at
+% the beginning of each subsection:
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>{Outline}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+% Let's get started
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
+  % You might wish to add the option [pausesections]
+\end{frame}
+
+% Section and subsections will appear in the presentation overview
+% and table of contents.
+\section{Introduction}
+%\frame{\tableofcontents[currentsection]}
+\begin{frame}{Brief Intro to MFG}{N player stochastic game}
+		$N$ players each make a decision (or control) $\alpha_t^i \in \mathbb{A}$ at time $t$ in an attempt to minimize their cost functions, $J^i$. For example:
+		\begin{equation}
+		\begin{split}
+		J^i(\alpha^i,X^{1,\alpha},...X^{N,\alpha})=&\mathbb{E}\Bigg[\int_{0}^{T}f^i(t,\alpha_t^i,X_t^{1,\alpha},...X_t^{N,\alpha})dt \\
+		&+g^i(X_T^{1,\alpha},...X_T^{N,\alpha}) \Bigg]
+		\end{split}
+		\end{equation}
+		where $X_t^{i,\alpha}$ is the state of player $i$ at time $t$, given by:
+		\begin{equation}
+		dX_t^i=b(t,\alpha_t^i,X_t^{i,\alpha},\bar{\mu}_t)dt+\sigma(t,\alpha_t^i,X_t^{i,\alpha},\bar{\mu}_t)dW_t
+		\end{equation}
+		and $f^i$ and $g^i$ are the running costs and terminal costs, respectively.
+\end{frame}
+
+	\begin{frame}{Brief Intro to MFG}{Moving to Mean Field}
+		\begin{itemize}
+			\item {
+				Assume players are symmetric.
+			}
+			\item {
+				Consider the limit $N \rightarrow \infty$ and consider the mean field game.
+		    }
+			\item {
+				Generic player has control $\alpha_t \in \mathbb{A}$ and state $X_t^{\alpha}$.
+			}
+			\item {
+				Distribution of players' states over time: $\mu=(\mu_t)_{0 \leq t \leq T}$.
+			}
+			\item {
+				Cost for generic player:
+				\begin{equation}
+				J(\alpha,X^{\alpha},\mu)=\mathbb{E}\Bigg[\int_{0}^{T}f(t,\alpha_t,X_t^{\alpha},\mu_t)dt+g(X_T^{\alpha},\mu_T) \Bigg]
+				\end{equation}
+			}
+			\pause
+			\item {
+				Goal: find analog to Nash equilibrium
+			}
+		\end{itemize}
+	\end{frame}
+
+
+
+\begin{frame}{Two Consensus Problems}
+	\begin{itemize}
+		\item {
+			Flocking: large number of birds reaching consensus on flocking velocity
+		}
+		\item {
+			Circadian Rhythm: large number of neuronal oscillators synchronizing with each other and external stimuli (e.g. the sun)
+		}
+	\end{itemize}
+\end{frame}
+
+\section{State of the Art}
+
+\subsection{Mean Field Games}
+
+\begin{frame}{State of the Art: Mean Field Games}{Analytic Approach}
+	Strategy:
+	\begin{itemize}
+				\item {
+					Fix flow of measures: $\mu=(\mu_t)_{0 \leq t \leq T}$
+				}
+				\item {
+					Solve stochastic control problem: find $\alpha^{\mu} \in \argmin J(\alpha,X^{\alpha},\mu)$
+				}
+				\item {
+					Find fixed point: $\mu$ s.t. $\mathcal{L}(X_t^{\alpha^{\mu}})=\mu_t$
+				}
+	\end{itemize}
+\end{frame}
+		
+\begin{frame}{State of the Art: Mean Field Games}{Analytic Approach: Stochastic Control Problem}
+	\begin{itemize}
+				\item {
+					Define the value function:
+					\begin{equation}
+					\begin{split}
+					V(t,x)=\inf_{\alpha \in \mathbb{A}}\mathbb{E}&\Bigg[\int_{t}^{T}f(s,\alpha_s,X_s^{\alpha},\mu_s)ds \\
+					&+g(X_T^{\alpha},\mu_T) \mid X_t = x \Bigg]
+					\end{split}
+					\end{equation}
+				}
+			\end{itemize}
+\end{frame}
+		
+\begin{frame}{State of the Art: Mean Field Games}{Analytic Approach: Stochastic Control Problem: HJB Equation}
+	\begin{itemize}
+				\item {
+					The value function satisfies the HJB equation:
+					\begin{block}{Hamilton Jacobi Bellman Equation}
+						\begin{equation}
+						\begin{split}
+						\partial_tV(t,x)+ H(t,x, \mu_t,\partial_x V,\hat{\alpha}(t,x,\mu_t, \partial_x V))&=0 \\
+						V(T,x)&=g(x,\mu_T)
+						\end{split}
+						\end{equation}
+					\end{block}
+					where  $H$ is the Hamiltonian, and $\hat{\alpha}$ is chosen to minimize the Hamiltonian.
+				}
+				\item {
+					Derivation from the dynamic programming principle and It\^{o}'s formula
+				}
+			\end{itemize}
+\end{frame}
+		
+\begin{frame}{State of the Art: Mean Field Games}{Analytic Approach: Kolmogorov (or Fokker-Planck) Equation}
+	\begin{itemize}
+				\item {
+					Solving HJB gives us an optimal control: $\alpha(t,x)$.
+				}
+				\item {
+					If all players use the optimal control, what is $\mathcal{L}(X_t^{\alpha})=:\mu_t$?
+				}
+				\item {
+					This is given by the Kolmogorov (or Fokker-Planck) equation:
+					\begin{block}{Kolmogorov Equation}
+						\begin{equation}
+						\begin{split}
+						\partial_t \mu_t-\frac{1}{2} trace(\sigma \sigma^T \partial_{xx}^2 \mu_t)& \\
+						+ div(b(t,x, \mu_t,\hat{\alpha}(t,x,\mu_t, \partial_x V))\cdot \mu_t)&=0 \\
+						\mu_0&= \mu^0   
+						\end{split}
+						\end{equation}
+					\end{block}
+				}
+				\item {
+					Derivation from It\^{o}'s formula and integration by parts
+				}
+			\end{itemize}
+\end{frame}
+		
+\begin{frame}{State of the Art: Mean Field Games}{Analytic Approach: Strategy Summary}
+	\begin{itemize}
+				\item {
+					Goal: find $V, \mu$ solving HJB and Kolmogorov.
+				}
+				\item {
+					Step 0: start with some guess for $\mu=(\mu_t)_{0 \leq t \leq T}$
+				}
+				\item {
+					Step 1: Given $\mu$ and $V(T,x)$, solve HJB for $V$, which gives us optimal $\alpha$.
+				}
+				\item {
+					Step 2: Given $\alpha$ and $\mu^0$, solve Kolmogorov for $\mu '$.
+				}
+				\item {
+					Repeat Steps 1 and 2 until $\mu = \mu '$.
+				}
+				\pause
+				\item {
+					Note: existence, uniqueness, or convergence are not guaranteed. In general, need convexity of $\mathbb{A}$, $f$, and $g$.
+				}
+				\pause
+				\item {
+					Another note: this system of PDEs is highly coupled, nonlinear, with one PDE in the forward direction and the other in the backward direction.
+				}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{State of the Art: Mean Field Games}{Existence \& Uniqueness}
+	\begin{itemize}
+		\item {
+			Cauchy-Lipschitz theory only holds for small T.
+		}
+		\item {
+			Existence
+			\begin{itemize}
+				\item In general, need Lipschitz coefficients and cost functions, non-degenerate diffusion coefficient.
+				\item Relies on Schauder's Fixed Point Theorem.
+			\end{itemize}
+		}
+		\item {
+			Uniqueness
+			\begin{itemize}
+				\item Assumming no common noise, in general, need monotone cost functions.
+				\begin{itemize}
+				\item Lasry Lions Monotonicity
+				\item $L$-Monotonicity
+				\end{itemize}
+			\end{itemize}
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{State of the Art: Mean Field Games}{Some Results}
+	\begin{itemize}
+		\item {
+			Linear-Quadratic Games.
+		}
+		\begin{itemize}
+			\item Stochastic maximum approach leads to matrix Ricatti equation.
+		\end{itemize}
+		\item Some results when cost is local.
+		\begin{itemize}
+			\item Cost is local and linear: Swiecicki et. al. \textit{An [imaginary time] Schr{\"o}dinger approach to mean field games.}
+		\end{itemize}
+		\item With common noise: Cardaliaguet et. al. \textit{The master equation and the convergence problem in mean field games.}
+		\item Nonlocal cost of particular form: Graber \& Bensoussan \textit{Existence and Uniqueness of Solutions for Betrand and Cournot mean field games.}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{State of the Art: Mean Field Games}{Open Problems}
+	\begin{itemize}
+		\item {
+			More general existence and uniqueness results.
+		}
+		\item {
+			Problems with non-convex cost functions.
+		}
+		\item {
+			Problems with non-local cost functions.
+		}
+	\end{itemize}
+\end{frame}
+
+\subsection{Flocking: Previous Work}
+
+\begin{frame}{State of the Art: Flocking}{Previous Work}
+	Cucker-Smale (CS)
+	\begin{equation}
+				\begin{split}
+				x'_i(t)&=v_i(t)\\
+				v'_i(t)&=\frac{1}{N}\sum_{j=1}^N\frac{v_j(t)-v_i(t)}{(1+\Vert x_j(t)-x_i(t) \Vert^2)^\beta}
+				\end{split}
+	\end{equation}
+	\begin{itemize}
+		\item {
+			Unconditional flocking when $\beta < 1/2$.
+		}
+		\item {
+			When $\beta \geq 1/2$, flocking occurs for sufficiently small values of $\sum_{i \neq j}\Vert x_i(0)-x_j(0)\Vert^2$ and $\sum_{i \neq j}\Vert v_i(0)-v_j(0)\Vert^2$.
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{State of the Art: Flocking}{Aside on $\beta$ Parameter}
+	\begin{itemize}
+		\item {
+			My first point.
+		}
+		\item {
+			My second point.
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{State of the Art: Flocking}{Previous Work}
+	Kinetic CS (Ha and Tadmor)
+	\begin{itemize}
+		\item {
+			Mean field limit of CS.
+		}
+		\item {
+			PDE of McKean-Vlasov type:
+		}
+		\begin{equation}
+		\partial_t \mu_t+v \partial_x \mu_t+\partial_v \left[\xi (x,v,\mu_t) \mu_t \right]=0
+		\end{equation}
+		where
+		\begin{equation}
+		\xi (x,v,\mu_t)=\int_{\mathbb{R}^{2d}} \frac{v'-v}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv'
+		\end{equation}
+	\end{itemize}
+	Results
+	\begin{itemize}
+		\item For compactly supported $\mu_0(x,v)$, time-asymptotic flocking when $\beta \leq 1/4$ (later extended to $\beta \leq 1/2$ by Ha and Liu).
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{State of the Art: Flocking}{Previous Work}
+	Normalized Weights Kinetic CS (?)
+	\begin{itemize}
+		\item {
+			Normalize weights so that the control is a true weighted average of $v'-v$.
+		}
+		\item {
+			PDE of McKean-Vlasov type:
+		}
+		\begin{equation}
+		\partial_t \mu_t+v \partial_x \mu_t-v \partial_v \mu_t-\mu_t+\phi (x,\mu_t)\partial_v \mu_t=0
+		\end{equation}
+		where
+		\begin{equation}
+		\phi (x,\mu_t)=\frac{\int_{\mathbb{R}^{2d}} \frac{v'}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv'}{\int_{\mathbb{R}^{2d}} \frac{1}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv}
+		\end{equation}
+	\end{itemize}
+	Results???
+\end{frame}
+
+
+
+\begin{frame}{State of the Art: Flocking}{Previous Work}
+	Mean Field Game Analog of CS (Nourian, Caines, and Malhalm\'{e})
+				\begin{equation}
+				\begin{split}
+				dx_t&=v_tdt\\
+				dv_t&=\alpha_tdt+\sigma dW_t
+				\end{split}
+				\end{equation}
+				Where $\alpha$ is chosen to minimize:
+				\begin{equation}
+				\begin{split}
+				J(\alpha)&=\limsup_{T \rightarrow \infty} \frac{1}{T} \int_0^T \Psi(x_t,v_t,\mu_t)+\alpha_t^2 dt \\
+				\Psi(x,v,\mu_t)&=\Vert\int_{\mathbb{R}^{2d}}\frac{v'-v}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv' \Vert^2
+				\end{split}
+				\end{equation}
+	Results:
+	\begin{itemize}
+		\item {
+			Exact solution when $\beta=0$. (Linear Quadratic Game.)
+		}
+		\item {
+			As $t\rightarrow \infty$, $v \sim N(\bar{v}_0,\sigma^2/2)$
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{State of the Art: Flocking}{Previous Work Summary}
+	Finitely many birds, no optimization:
+	\begin{center}
+	\begin{tabular}{|c|c|c|}
+	 \hline
+	 Authors & Noise & Interaction Type  \\ \hline
+	 Cucker, Smale 2007& no & spatial weights \\ \hline
+	 Ha, Liu 2009& no&spatial weights \\ \hline
+	 Martin, Girard 2010 & no&unweighted $(\Vert x'-x\Vert^2 <R)$ \\ \hline
+	 Cucker, Dong 2010 & no&spatial weights \& repulsion \\ \hline
+	 Cucker, Mordecki 2008 & yes&spatial weights \\ \hline
+	 Ha, Lee, Levy 2009 & yes&spatial weights \\ \hline
+	 Ton, Linh, Yagi 2015 & yes& noisy spatial weights \\
+	 \hline
+	\end{tabular}
+	\end{center}
+\end{frame}
+
+\begin{frame}{State of the Art: Flocking}{Previous Work Summary}
+	Justification of Mean Field Limit (still no optimization):
+	\begin{center}
+		\begin{tabular}{|c|c|c|}
+			\hline
+			Authors & Noise & Result  \\ \hline
+			Ha, Tadmor 2008& no & flocking for initially compact data \\ \hline
+			Carrillo, et. al. 2010& no & exponentially fast flocking \\ \hline
+			Bolley, Ca\~nizo, Carrillo 2010 & yes& existence and uniqueness \\
+			\hline
+		\end{tabular}
+	\end{center}
+	All of these results are for the spatial weights.
+\end{frame}
+
+\begin{frame}{State of the Art: Flocking}{Previous Work Summary}
+	Mean field:
+	\begin{center}
+		\begin{tabular}{|c|c|c|}
+			\hline
+			Authors & Noise & Interaction Type  \\ \hline
+			Ca\~nizo, et. al. 2010& no & spatial weights \& A/R \\ \hline
+			Karper, et. al. 2013& yes & spatial weights \\
+			& & existence of weak solutions \\ \hline
+			Piccoli, et. al. 2015& no & spatial weights \& sparse external force \\ \hline
+			Barbaro, et. al. 2016& yes & normalized spatial weights \& A/R \\
+			& & results only for $\beta=0$ \\ \hline
+			Nourian, et. al. 2010 & yes& optimization (MFG), spatial weights \\
+			& & results only for $\beta=0$ \\
+			\hline
+		\end{tabular}
+	\end{center}
+\end{frame}
+
+\begin{frame}{State of the Art: Flocking}{Open Problems}
+	\begin{itemize}
+		\item {
+			Noisy Kinetic or MFG analog of CS Flocking when $\beta > 0$, with and without normalized spatial weights.
+		}
+	\end{itemize}
+\end{frame}
+
+\section{My Progress}
+
+\subsection{Flocking Problem Formulation}
+
+\begin{frame}{Flocking Problem Formulation}
+	\begin{itemize}
+		\item {
+			For now, consider the MFG formulation of Nourian et. al. but with finite horizon T.
+		}
+						\begin{equation}
+						\begin{split}
+						dx_t&=v_tdt\\
+						dv_t&=\alpha_tdt+\sigma dW_t
+						\end{split}
+						\end{equation}
+						Where $\alpha$ is chosen to minimize:
+						\begin{equation}
+						\begin{split}
+						J(\alpha)&=\mathbb{E} \int_0^T \Psi(x_t,v_t,\mu_t)+\alpha_t^2 dt \\
+						\Psi(x,v,\mu_t)&=\Vert\int_{\mathbb{R}^{2d}}\frac{v'-v}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv' \Vert^2
+						\end{split}
+						\end{equation}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Flocking Problem Formulation}
+	\begin{itemize}
+		\item {
+			For now, consider the MFG formulation of Nourian et. al. but with finite horizon T.
+		}
+		\item {
+			The solution is given by the HJB and Kolmogorov equations:
+			\begin{equation}
+			\begin{split}
+			\partial_t V+\frac{\sigma^2}{2}\partial^2_{vv} V+ v \partial_x V+ \alpha \partial_v V+\alpha^2+\Psi(x,v,\mu)&=0 \\
+			V(T,x,v)&=0 \\
+			\partial_t \mu_t-\frac{\sigma^2}{2}\partial^2_{vv} \mu_t + v \partial_x \mu_t +div_v(\alpha_t \mu_t) &=0 \\
+			\mu(0,x,v)=\mu^0(x,v)& \\
+			\alpha=-\frac{1}{2}\partial_v V&
+			\end{split}
+			\end{equation}
+		}
+	\end{itemize}
+\end{frame}
+
+\subsection{Deriving Stable Scheme \& Boundary Conditions}
+
+\begin{frame}{Numerical Approach}
+		\begin{itemize}
+			\item {
+				To solve numerically, one common method is finite differences.
+			}
+			\item {
+				The unknown function, $f$, will be approximated on a lattice of points:
+				\begin{equation}
+				f(t_i,x_j) \approx f(i \cdot \Delta t,j \cdot \Delta x)
+				\end{equation}
+			}
+			\item {
+				All derivatives are replaced by finite differences.
+			}
+			\item {
+				For example, the heat equation:
+				\begin{equation}
+				\partial_t f= \partial_{xx}^2 f
+				\end{equation}
+			}
+			\item {
+				becomes:
+				\begin{equation}
+				\frac{f(t_{i+1},x)-f(t_i,x)}{\Delta t}=\frac{f(t_i,x_{j+1})-2f(t_i,x_j)+f(t_i,x_{j-1})}{\Delta x^2}
+				\end{equation}
+			}
+		\end{itemize}
+\end{frame}
+
+\begin{frame}{Numerical Approach, continued}
+	Following the analytic approach, our numerical approach is the following:
+	\begin{itemize}
+			\item {
+				Goal: find grid functions $V(t_k,x_i,v_j)$ and $\mu_{t_k}(x_i,v_j)$ solving finite difference equations for HJB and Kolmogorov.
+			}
+			\item {
+				Step 0: start with some guess for $\mu=(\mu_{t_k}(x_i,v_j))_{0 \leq t_k \leq T}$
+			}
+			\item {
+				Step 1: Given $\mu$ and $V(T,x)$, solve finite difference HJB explicitly backwards in time for $V$, which gives us optimal $\alpha$.
+			}
+			\item {
+				Step 2: Given $\alpha$ and $\mu^0$, solve finite difference Kolmogorov explicitly forwards in time for $\mu '$.
+			}
+			\item {
+				Repeat Steps 1 and 2 until $\mu \approx \mu '$.
+			}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Numerical Approach: Complications}
+		\begin{itemize}
+			\item {
+				Curse of dimensionality: number of lattice points grows exponentially with the dimension of the state space.
+				
+			}
+			\item {
+				Stability: $\Delta t$ can't be too big (CFL condition).
+				\begin{center}
+					$\Delta x$ smaller and b (drift) larger $\implies$ need smaller $\Delta t$.
+				\end{center}
+			}
+			\item {
+				Accuracy: use upwind scheme for 1st order spatial derivatives
+			}
+			\item {
+				What boundary conditions should be used?
+			}
+		\end{itemize}
+\end{frame}
+
+	\begin{frame}{Numerical Approach: Stability and Accuracy}
+		\begin{itemize}
+			\item CFL condition:
+			\begin{equation} 
+			\Delta t \leq \frac{1}{2(\frac{\sigma^2}{\Delta x^2}+\frac{|b|}{\Delta x})}
+			\end{equation}
+			\item Upwind scheme:
+			\begin{equation}
+			[Lf]=b \cdot \frac{\partial f}{\partial x} + \frac{\sigma^2}{2}\frac{\partial^2 f}{\partial x^2}
+			\end{equation}
+			\begin{equation}
+			[Lf](i)=\sum_{j} L(i,j) f(x_j)
+			\end{equation}
+			Choose forward or backward differences such that:
+			\begin{enumerate}
+				\item $L(i,j)\geq 0$ when $i \neq j$.
+				\item $L(i,i)=-\sum_{j\neq i} L(i,j)$
+			\end{enumerate}
+			
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Numerical Approach: Upwind Scheme}
+		For example:
+		\begin{equation}
+		\left[b \cdot \frac{\partial f}{\partial x} \right](x_i)=b^{+} \cdot \frac{f(x_{i+1})-f(x_i)}{\Delta x}-b^{-} \cdot \frac{f(x_{i})-f(x_{i-1})}{\Delta x}
+		\end{equation}
+		\begin{equation}
+		L(i,i+1)=b^{+} \cdot \frac{1}{\Delta x} \geq 0
+		\end{equation}
+		\begin{equation}
+		L(i,i-1)=-b^{-} \cdot \frac{-1}{\Delta x} \geq 0
+		\end{equation}
+		\begin{equation}
+		L(i,i)=b^{+} \cdot \frac{-1}{\Delta x}-b^{-} \cdot \frac{1}{\Delta x} = -[L(i,i+1)+L(i,i-1)]
+		\end{equation}
+	\end{frame}
+	
+	\begin{frame}{Numerical Approach: Stability of $\mu$}
+		\begin{itemize}
+			\item CFL + Upwind $\rightarrow$ Solution to Kolmogorov is a prob. measure, i.e.
+			\begin{equation}
+			\begin{split}
+			\mu(t_n,x_i) & \geq 0 \\
+			\sum_i \mu(t_n,x_i) &= 1
+			\end{split}
+			\end{equation}
+			\item Proof:
+			\begin{equation}
+			\frac{\mu(t_{n+1},x_i)-\mu(t_{n},x_i)}{\Delta t}=\sum_{j} L(j,i) \mu(t_n,x_j)
+			\end{equation}
+			\begin{equation}
+			\begin{split}
+			\mu(t_{n+1},x_i)&=\mu(t_{n},x_i)+ \Delta t \cdot L(i,i)\mu(t_n,x_i) + \Delta t \cdot \sum_{j\neq i} L(j,i) \mu(t_n,x_j)  \\
+			& \geq \mu(t_{n},x_i) (1+ \Delta t \cdot L(i,i))
+			\end{split}
+			\end{equation}
+			$\mu(t_{n+1},x_i) \geq 0$ if $\Delta t \cdot| L(i,i)| \leq 1$ (CFL Condition)
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Numerical Approach: Stability of $\mu$ (continued)}
+		\begin{equation}
+		\begin{split}
+		\sum_i \mu(t_{n+1},x_i)=& \sum_i \mu(t_{n},x_i)+\Delta t \cdot \sum_i \sum_{j} L(j,i) \mu(t_n,x_j) \\
+		& = 1 + \Delta t \cdot \sum_j \Big(\sum_i L(j,i)\Big) \mu(t_n,x_j) \\
+		& = 1
+		\end{split}
+		\end{equation}
+	\end{frame}
+
+\begin{frame}{Numerical Approach: Boundary Behavior}
+	\begin{itemize}
+		\item {
+			The domain of the original problem (in 1 dimension) is $\mathbb{R}^{2d}$. For numerics, we are restricted to a finite domain.
+		}
+		\item {
+			Let the domain of $v$ be $D_v =[-v_{max},v_{max}]$.
+			ToDo: less text
+			\begin{itemize}
+				\item If birds were 'killed' at the boundary, the total mass of the system would decrease in time, which is undesirable.
+				\item If the boundary was periodic, then birds that have a large positive velocity would be replaced by birds with a large negative velocity, which is unrealistic.
+				\item Intuitively, if a bird reaches a physical upper limit on it's velocity, it would have to decrease it's velocity. Thus, we choose reflecting boundary conditions at the boundary $\partial D_v$.
+				\item Nonetheless, $v_{max}$ will be chosen large enough such that only a small amount of the total mass can reach the boundary $\partial D_v$, limiting the effect of our choice of boundary condition for $\partial D_v$.
+			\end{itemize}
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Numerical Approach: Boundary Behavior, continued}
+	\begin{itemize}
+		\item {
+			Let $R \in \mathbb{R}$ such that $x_0 \in [-R,R]$ for all birds. Then $x_t \in [-R-Ty_{ax},R+T y_{max}]$ $\forall t$.
+		}
+		\item {
+			Let the domain of $x$ be $D_x =[-R-Ty_{max}-\epsilon,R+T y_{max}+\epsilon]$. Then no birds will ever reach the boundary $\partial D_x$. Thus, the choice of boundary condition for $\partial D_x$ should not affect these results, and we can arbitrarily choose reflecting boundary conditions for $\partial D_x$.
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Numerical Approach: Boundary Conditions}
+	\begin{itemize}
+		\item {
+			Now that we have established boundary behavior, we need to establish boundary conditions for the HJB and Kolmogorov equations.
+		}
+		\item {
+			Reflecting on the boundaries corresponds to a von Neumann boundary condition for the HJB:
+			\begin{equation}
+			\begin{split}
+			\partial_v V(t,x,y_{min})&=0 \\
+			\partial_v V(t,x,y_{max})&=0 \\
+			\partial_x V(t,x_{min},y)&=0 \\
+			\partial_x V(t,x_{max},y)&=0
+			\end{split}
+			\end{equation}
+		}
+		\item {
+			We also need an approximation for $\partial^2_{vv} V(t,x,y)$ for $y=y_{min},y_{max}$.
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Numerical Approach: Boundary Conditions, continued}
+	\begin{itemize}
+		\item {
+			By making the approximation $V(t,x,y_{min}-\Delta v) \approx V(t,x,y_{min}+\Delta v)$ (based on the von Neumann boundary), we can approximate:
+			\begin{equation}
+				\partial^2_{vv} V(t,x,y_{min})\approx \frac{2V(t,x,y_{min}+\Delta v)-2V(t,x,y_{min})}{\Delta v^2}
+			\end{equation}
+			and similarly for $y_{max}$.
+		}
+		\item {
+			Now, we have fully specified the discrete operator $L$ such that the finite difference HJB equation is given by:
+			\begin{equation}
+			\partial_t V+L[V]=0
+			\end{equation}
+		}
+		\item {
+			The boundary conditions for the finite difference Kolmogorov equation are already determined by our choice for $L$:
+			\begin{equation}
+			\partial_t \mu_t=L^*[\mu_t]
+			\end{equation}
+		}
+	\end{itemize}
+\end{frame}
+
+\subsection{Numerical Results}
+
+\begin{frame}{Numerical Results}{MFG of flocking, unnormalized weights}
+	\begin{itemize}
+		\item {
+			ToDo: show variance increases with t for $\beta >0$.
+		}
+		\item {
+			Lead into motivation for using normalized weights
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Numerical Results}{MFG of flocking, normalized weights}
+	\begin{itemize}
+		\item {
+			ToDo: show variance decreases/stabilizes
+		}
+		\item {
+			Explain how the relationship of variance with $\beta$, $\lambda$, and $\sigma$ is not clear. To simplify the problem, let's return to the Kinetic-CS model. (Question: does variance increase for unnormalized Kinetic-CS? Not sure if I ever ran this.)
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Numerical Results}{Kinetic-CS flocking, normalized weights}
+	\begin{itemize}
+		\item {
+			ToDo: show variance goes to $\sigma^2/2$.
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Numerical Results}{Verifying Code}
+	\begin{itemize}
+		\item {
+			ToDo: search 'verify' in Notes
+		}
+		\item {
+			Mass is conserved. Mass is nonnegative. (Put in better wording and using equations)
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Conjecture}
+	\begin{block}{Conjecture}
+		For $\mu_0(x,v)$ with compact support, the solution to noisy Kinetic Cucker-Smale flocking with normalized weights has the following time-asymptotic behavior:
+			\begin{equation}
+			\lim_{t \rightarrow \infty} Var(v_t)=\frac{\sigma^2}{2} 
+			\end{equation}
+			Or equivalently,
+			\begin{equation}
+			\lim_{t \rightarrow \infty} \mathbb{E}^{\mu_t}(v_t-\mathbb{E}^{\mu_t}v_t)^2=\frac{\sigma^2}{2}
+			\end{equation}
+	\end{block}
+\end{frame}
+
+\subsection{Analytical Progress}
+
+\begin{frame}{Analytical Progress}{Direct Calculation}
+	\begin{equation}
+		\begin{split}
+			dx_t&=v_tdt\\
+			dv_t&=(-v_t+\phi(x_t,\mu_t))dt+\sigma dW_t
+		\end{split}
+	\end{equation}
+	where
+	\begin{equation}
+		\phi (x,\mu_t)=\frac{\int_{\mathbb{R}^{2d}} \frac{v'}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv'}{\int_{\mathbb{R}^{2d}} \frac{1}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv}
+	\end{equation}
+\end{frame}
+
+\begin{frame}{Analytical Progress}{Direct Calculation, continued}
+	\begin{equation}
+		dv_t=(-v_t+\phi(x_t,\mu_t))dt+\sigma dW_t
+	\end{equation}
+
+	By It\^{o},
+		\begin{equation}
+		\begin{split}
+			dv_t^2&=(2v_t(-v_t+\phi(x_t,\mu_t))+\sigma^2)dt+2\sigma v_t dW_t \\
+			\mathbb{E}v_t^2&=\mathbb{E}v_0^2-2\int_0^t \mathbb{E}v_s^2dw+2\int_0^t \mathbb{E}(v_s \phi(x_s,\mu_s))ds+t\sigma^2 \
+		\end{split}
+		\end{equation}
+	Let $f(t)=\mathbb{E}v_t^2$ and let $g(t)=\mathbb{E}(v_t \phi(x_t,\mu_t))$.
+	
+	Then,
+	\begin{equation}
+	f(t)=f(0)-2 \int_0^t f(s)ds+2\int_0^t g(s)ds + t \sigma^2
+	\end{equation}
+\end{frame}
+
+\begin{frame}{Analytical Progress}{Direct Calculation, continued}
+	\begin{equation}
+	f(t)=f(0)-2 \int_0^t f(s)ds+2\int_0^t g(s)ds + t \sigma^2
+	\end{equation}
+	Assuming $f(t)$ is differentiable,
+	\begin{equation}
+	f'(t)=-2f(t)+2g(t)+\sigma^2
+	\end{equation}
+	By integrating factor method,
+	\begin{equation}
+	f(t)=\frac{\sigma^2}{2}+\left(f(0)-\frac{\sigma^2}{2}\right)e^{-2t}+2e^{2t}\int_0^te^{-2s}g(s)ds
+	\end{equation}
+\end{frame}
+
+\begin{frame}{Analytical Progress}{Direct Calculation, continued}
+	\begin{equation}
+	f(t)=\frac{\sigma^2}{2}+\left(f(0)-\frac{\sigma^2}{2}\right)e^{-2t}+2e^{2t}\int_0^te^{-2s}g(s)ds
+	\end{equation}
+	\begin{block}{Hypothesis}
+	Suppose $g(t)$ is bounded and $\lim_{t \rightarrow \infty}g(t) =\bar{v}^2:=(\lim_{t \rightarrow \infty} \mathbb{E}v_t)^2$.
+	\end{block}
+	Then $\forall \epsilon$, $\exists T$ and $\exists M$ such that $|g(s)-\bar{v}^2|<\epsilon,$ $s>T$ and $|g(s)|<M,$ $0 \leq s \leq T$.
+	Then for $t>T$,
+		\begin{equation}
+		\begin{split}
+		f(t)\leq& \frac{\sigma^2}{2}+\left(f(0)-\frac{\sigma^2}{2}\right)e^{-2t}+M e^{-2(t-T)}-M e^{-2t} \\
+		&-(\bar{v}^2+\epsilon) e^{-2(t-T)}+(\bar{v}^2+\epsilon)
+		\end{split}
+		\end{equation}
+\end{frame}
+
+\begin{frame}{Analytical Progress}{Direct Calculation, continued}
+	\begin{equation}
+	\lim_{t \rightarrow \infty}f(t)\leq \frac{\sigma^2}{2}+\bar{v}^2+\epsilon
+	\end{equation}
+	Similarly,
+	\begin{equation}
+	\lim_{t \rightarrow \infty}f(t)\geq \frac{\sigma^2}{2}+\bar{v}^2-\epsilon
+	\end{equation}
+	Thus,
+	\begin{equation}
+	\begin{split}
+	\lim_{t \rightarrow \infty} \mathbb{E}v_t^2&=\frac{\sigma^2}{2}+\bar{v}^2 \\
+	\lim_{t \rightarrow \infty} Var(v_t)&=\frac{\sigma^2}{2}
+	\end{split}
+	\end{equation}
+\end{frame}
+
+\begin{frame}{Analytical Progress}{Back to Numerics}
+	\begin{itemize}
+		\item It remains to show that the hypothesis is true.
+		\item ToDo: Back to numerics, show g(t) goes to 0 (for $\bar{v}=0$)
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}{Analytical Progress}{Expansion}
+	\begin{itemize}
+		\item {
+			Since the previous results for finitely many birds or without noise are for $0 \leq \beta \leq 1/2$, perhaps we should investigate for small $\beta >0$.
+		}
+		\item {
+			This motivates the use of an expansion in $\beta$ about $\beta=0$.
+		}
+		\item {
+			Again, the system we would like to solve is:
+			\begin{equation}
+			\partial_t \mu+v \partial_x \mu-v \partial_v \mu-\mu=-\phi (x,\mu)\partial_v \mu
+			\end{equation}
+			where
+			\begin{equation}
+			\phi (x,\mu)=\frac{\int_{\mathbb{R}^{2d}} \frac{v'}{(1+\Vert x'-x \Vert^2)^\beta}\mu(t,x',v')dx'dv'}{\int_{\mathbb{R}^{2d}} \frac{1}{(1+\Vert x'-x \Vert^2)^\beta}\mu(t,x',v')dx'dv}
+			\end{equation}
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Analytical Progress}{Expansion, continued}
+	\begin{itemize}
+		\item {
+			We write the solution, $\mu(t,x,v)$ as an expansion in $\beta$:
+			\begin{equation}
+			\mu=\mu_0+\beta \mu_1+ \beta^2 \mu_2+...
+			\end{equation}
+		}
+		\item {
+			By substituting this expansion in $\phi(x,\mu)$, we have:
+					\begin{equation}
+					\begin{split}
+					\phi(x,\mu)=&\bar{v}_{\mu_1}(t) +\beta [ \bar{v}_{\mu_0}(t)+\bar{v}_{\mu_1}(t) \\
+					&-\int_{\mathbb{R}^2} v' log(1+(x-x')^2)\mu_0(t,x',v')dx'dv' ] + \mathcal{O}(\beta^2)
+					\end{split}
+					\end{equation}
+			where
+					\begin{equation}
+					\bar{v}_{\mu_k}(t)=\mathbb{E}^{\mu_k}(v_t)
+					\end{equation}
+		}
+
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Analytical Progress}{Expansion, continued}
+	\begin{itemize}
+		\item {
+			ToDo: first, show that $\bar{v}_{\mu_0}(t)=\mathbb{E}^{\mu_0}(v_t)=\bar{v}_0$
+		}
+		\item {
+			Substituting this expansion into Equation ? and collecting terms independent of $\beta$, we arrive at the 0'th order system:
+			\begin{equation}
+			\frac{\partial \mu_0}{\partial t}+v\frac{\partial \mu_0}{\partial x}-(v-\bar{v}_0)\frac{\partial \mu_0}{\partial v}-\mu_0-\frac{\sigma^2}{2}\frac{\partial^2 \mu_0}{\partial v^2}=0
+			\label{0th}
+			\end{equation}
+		}
+		\item {
+			Collecting terms of order $\beta$, we arrive at the 1st order correction system:
+			\begin{equation}
+			\begin{split}
+			&\frac{\partial \mu_1}{\partial t}+v\frac{\partial \mu_1}{\partial x}-(v-\bar{v}_0)\frac{\partial \mu_1}{\partial v}-\mu_1-\frac{\sigma^2}{2}\frac{\partial^2 \mu_1}{\partial v^2} \\
+			&=\left[-\bar{v}_0-{\color{red}\bar{v}_{\mu_1}(t)}+ \int v' log(1+(x-x')^2) d \mu_0(x',v') \right] \cdot \frac{\partial \mu_0}{\partial v}
+			\end{split}
+			\label{1st}
+			\end{equation}
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Analytical Progress}{Expansion Summary}
+	\begin{itemize}
+		\item {
+			Assume $\mu_0(x,v)$ is symmetric about some $(\bar x_0,\bar v_0)$
+		}
+		\item {
+			Show that without loss of generality, can assume $(\bar x_0,\bar v_0)=(0,0)$ (because can translate solution by $(t\bar v_0,\bar v_0))$
+		}
+		\item {
+			ToDo: Show general strategy for building solution
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Analytical Progress}{Expansion: General Initial Condition}
+	\begin{itemize}
+		\item {
+			ToDo: Show problem term that keeps us from using the approach from before
+		}
+	\end{itemize}
+\end{frame}
+
+
+\section{Future Directions}
+
+\subsection{Numerics}
+
+\subsection{Ideas for Proving Conjecture}
+
+\begin{frame}{Future Directions}{Ideas for Proving Conjecture}
+	\begin{itemize}
+		\item {
+			My first point.
+		}
+		\item {
+			My second point.
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Future Directions}{Numerics}
+	\begin{itemize}
+		\item {
+			My first point.
+		}
+		\item {
+			My second point.
+		}
+	\end{itemize}
+\end{frame}
+
+\subsection{New Problem: Circadian Oscillators}
+
+\begin{frame}{Future Directions}{New Problem: Circadian Oscillators}
+	\begin{itemize}
+		\item {
+			My first point.
+		}
+		\item {
+			My second point.
+		}
+	\end{itemize}
+\end{frame}
+
+% Placing a * after \section means it will not show in the
+% outline or table of contents.
+\section*{Summary}
+\begin{frame}{Summary}
+	\begin{itemize}
+		\item {
+			My first point.
+		}
+		\item {
+			My second point.
+		}
+	\end{itemize}
+\end{frame}
+
+\end{document}
+
+

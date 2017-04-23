@@ -44,7 +44,7 @@ Let $\eta^*$ be the ergodic average cost:
 \end{equation}
 
 \section{PDEs}
-The solution is given by:
+The solution is given by the HJB and Kolmogorov equations:
 
 \begin{equation}
 \partial_t V+\omega \partial_\theta V=-\frac{\sigma^2}{2}\partial_{\theta \theta}^2 V+\eta^*+\frac{1}{2R}(\partial_\theta V)^2-\bar{c}(t,\theta,\mu(t,\cdot))-c_{sun}(t,\theta)
@@ -93,6 +93,7 @@ We take a Cole-Hopf transformation:
 \label{ColeHopf}
 \end{equation}
 
+which leads to the linear problem:
 \begin{equation}
 \sigma^2R(\omega_S-\omega) \xi'=\frac{\sigma^2R}{2} \xi'' + \xi \left[\eta^* -\int_0^{2\pi}\frac{1}{2} \sin^2\left(\frac{z-z'}{2}\right)d \tilde{\mu}(z')-\frac{F}{2} \sin^2\left(\frac{z}{2}\right)\right]
 \label{ODE}
@@ -115,6 +116,6 @@ Combining this with equations (\ref{alpha}) and (\ref{K}), we have:
 If there exist $\eta^* \geq0$, $\xi(z)$, and $\tilde{\mu}(z)$ satisfying equations (\ref{ODE}) and (\ref{consistency}), with the additional constraint that $\tilde{\mu}(z)$ is a probability measure ($\int_0^{2\pi}\tilde{\mu}dz=1$), then $\mu(t,\theta)=\tilde{\mu}(\theta-\omega_S t)$ and $V(t,\theta)=\sigma^2R \log(\xi(\theta-\omega_S t))$ is a solution to the HJB (\ref{HJB}) and Kolmogorov equations (\ref{Kolmogorov}) with corresponding ergodic average cost $\eta^*$.
 
 \textbf{Note on how this compares with Lemma 4.4 in the Yin paper:}
-In Yin, the only difference from equation (\ref{ODE}) is the left most and the right most terms. And only difference from equation (\ref{consistency}) is the 2 right most terms, which allows them to make the relation: $\tilde{\mu}=\xi^2$.
+In Yin, the only difference from equation (\ref{ODE}) is the left most and the right most terms. And only difference from equation (\ref{consistency}) is the 2 right most terms, which allows them to make the relation: $\tilde{\mu}=\xi^2$. They claim that there exist non constant solutions for this new eigenvalue problem, and that 'The proof follows closely the Hopf bifurcation theorem using the method of Lyapunov-Schmidt' which they provide a sketch for.
 
 \end{document}
