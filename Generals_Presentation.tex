@@ -365,7 +365,7 @@
 			PDE of McKean-Vlasov type:
 		}
 		\begin{equation}
-		\partial t \mu_t+v \partial_x \mu_t+\partial_v \left[\xi (x,v,\mu_t) \mu_t \right]=0
+		\partial_t \mu_t+v \partial_x \mu_t+\partial_v \left[\xi (x,v,\mu_t) \mu_t \right]=0
 		\end{equation}
 		where
 		\begin{equation}
@@ -388,7 +388,7 @@
 			PDE of McKean-Vlasov type:
 		}
 		\begin{equation}
-		\partial t \mu_t+v \partial_x \mu_t-v \partial_v \mu_t-\mu_t+\phi (x,\mu_t)\partial_v \mu_t=0
+		\partial_t \mu_t+v \partial_x \mu_t-v \partial_v \mu_t-\mu_t+\phi (x,\mu_t)\partial_v \mu_t=0
 		\end{equation}
 		where
 		\begin{equation}
@@ -404,14 +404,14 @@
 	Mean Field Game Analog of CS (Nourian, Caines, and Malhalm\'{e})
 				\begin{equation}
 				\begin{split}
-				dx(t)&=v(t)dt\\
-				dv(t)&=\alpha_tdt+\sigma dW
+				dx_t&=v_tdt\\
+				dv_t&=\alpha_tdt+\sigma dW_t
 				\end{split}
 				\end{equation}
 				Where $\alpha$ is chosen to minimize:
 				\begin{equation}
 				\begin{split}
-				J(\alpha)&=\limsup_{T \rightarrow \infty} \frac{1}{T} \int_0^T \Psi(x,v,\mu_t)+\alpha_t^2 dt \\
+				J(\alpha)&=\limsup_{T \rightarrow \infty} \frac{1}{T} \int_0^T \Psi(x_t,v_t,\mu_t)+\alpha_t^2 dt \\
 				\Psi(x,v,\mu_t)&=\Vert\int_{\mathbb{R}^{2d}}\frac{v'-v}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv' \Vert^2
 				\end{split}
 				\end{equation}
@@ -497,14 +497,14 @@
 		}
 						\begin{equation}
 						\begin{split}
-						dx(t)&=v(t)dt\\
-						dv(t)&=\alpha_tdt+\sigma dW
+						dx_t&=v_tdt\\
+						dv_t&=\alpha_tdt+\sigma dW_t
 						\end{split}
 						\end{equation}
 						Where $\alpha$ is chosen to minimize:
 						\begin{equation}
 						\begin{split}
-						J(\alpha)&=\mathbb{E} \int_0^T \Psi(x,v,\mu_t)+\alpha_t^2 dt \\
+						J(\alpha)&=\mathbb{E} \int_0^T \Psi(x_t,v_t,\mu_t)+\alpha_t^2 dt \\
 						\Psi(x,v,\mu_t)&=\Vert\int_{\mathbb{R}^{2d}}\frac{v'-v}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv' \Vert^2
 						\end{split}
 						\end{equation}
@@ -801,7 +801,7 @@
 			\end{equation}
 			Or equivalently,
 			\begin{equation}
-			\lim_{t \rightarrow \infty} \mathbb{E}(v_t-\mathbb{E}v_t)^2=\frac{\sigma^2}{2}
+			\lim_{t \rightarrow \infty} \mathbb{E}^{\mu_t}(v_t-\mathbb{E}^{\mu_t}v_t)^2=\frac{\sigma^2}{2}
 			\end{equation}
 	\end{block}
 \end{frame}
@@ -809,26 +809,111 @@
 \subsection{Analytical Progress}
 
 \begin{frame}{Analytical Progress}{Direct Calculation}
+	\begin{equation}
+		\begin{split}
+			dx_t&=v_tdt\\
+			dv_t&=(-v_t+\phi(x_t,\mu_t))dt+\sigma dW_t
+		\end{split}
+	\end{equation}
+	where
+	\begin{equation}
+		\phi (x,\mu_t)=\frac{\int_{\mathbb{R}^{2d}} \frac{v'}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv'}{\int_{\mathbb{R}^{2d}} \frac{1}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv}
+	\end{equation}
+\end{frame}
+
+\begin{frame}{Analytical Progress}{Direct Calculation, continued}
+	\begin{equation}
+		dv_t=(-v_t+\phi(x_t,\mu_t))dt+\sigma dW_t
+	\end{equation}
+
+	By It\^{o},
+		\begin{equation}
+		\begin{split}
+			dv_t^2&=(2v_t(-v_t+\phi(x_t,\mu_t))+\sigma^2)dt+2\sigma v_t dW_t \\
+			\mathbb{E}v_t^2&=\mathbb{E}v_0^2-2\int_0^t \mathbb{E}v_s^2dw+2\int_0^t \mathbb{E}(v_s \phi(x_s,\mu_s))ds+t\sigma^2 \
+		\end{split}
+		\end{equation}
+	Let $f(t)=\mathbb{E}v_t^2$ and let $g(t)=\mathbb{E}(v_t \phi(x_t,\mu_t))$.
+	
+	Then,
+	\begin{equation}
+	f(t)=f(0)-2 \int_0^t f(s)ds+2\int_0^t g(s)ds + t \sigma^2
+	\end{equation}
+\end{frame}
+
+\begin{frame}{Analytical Progress}{Direct Calculation, continued}
+	\begin{equation}
+	f(t)=f(0)-2 \int_0^t f(s)ds+2\int_0^t g(s)ds + t \sigma^2
+	\end{equation}
+	Assuming $f(t)$ is differentiable,
+	\begin{equation}
+	f'(t)=-2f(t)+2g(t)+\sigma^2
+	\end{equation}
+	By integrating factor method,
+	\begin{equation}
+	f(t)=\frac{\sigma^2}{2}+\left(f(0)-\frac{\sigma^2}{2}\right)e^{-2t}+2e^{2t}\int_0^te^{-2s}g(s)ds
+	\end{equation}
+\end{frame}
+
+\begin{frame}{Analytical Progress}{Direct Calculation, continued}
+	\begin{equation}
+	f(t)=\frac{\sigma^2}{2}+\left(f(0)-\frac{\sigma^2}{2}\right)e^{-2t}+2e^{2t}\int_0^te^{-2s}g(s)ds
+	\end{equation}
+	\begin{block}{Hypothesis}
+	Suppose $g(t)$ is bounded and $\lim_{t \rightarrow \infty}g(t) =\bar{v}^2:=(\lim_{t \rightarrow \infty} \mathbb{E}v_t)^2$.
+	\end{block}
+	Then $\forall \epsilon$, $\exists T$ and $\exists M$ such that $|g(s)-\bar{v}^2|<\epsilon,$ $s>T$ and $|g(s)|<M,$ $0 \leq s \leq T$.
+	Then for $t>T$,
+		\begin{equation}
+		\begin{split}
+		f(t)\leq& \frac{\sigma^2}{2}+\left(f(0)-\frac{\sigma^2}{2}\right)e^{-2t}+M e^{-2(t-T)}-M e^{-2t} \\
+		&-(\bar{v}^2+\epsilon) e^{-2(t-T)}+(\bar{v}^2+\epsilon)
+		\end{split}
+		\end{equation}
+\end{frame}
+
+\begin{frame}{Analytical Progress}{Direct Calculation, continued}
+	\begin{equation}
+	\lim_{t \rightarrow \infty}f(t)\leq \frac{\sigma^2}{2}+\bar{v}^2+\epsilon
+	\end{equation}
+	Similarly,
+	\begin{equation}
+	\lim_{t \rightarrow \infty}f(t)\geq \frac{\sigma^2}{2}+\bar{v}^2-\epsilon
+	\end{equation}
+	Thus,
+	\begin{equation}
+	\begin{split}
+	\lim_{t \rightarrow \infty} \mathbb{E}v_t^2&=\frac{\sigma^2}{2}+\bar{v}^2 \\
+	\lim_{t \rightarrow \infty} Var(v_t)&=\frac{\sigma^2}{2}
+	\end{split}
+	\end{equation}
+\end{frame}
+
+\begin{frame}{Analytical Progress}{Back to Numerics}
 	\begin{itemize}
-		\item {
-			ToDo: g(t) going to 0, lose paper in blue book.
-		}
-		\item {
-			My second point.
-		}
+		\item It remains to show that the hypothesis is true.
+		\item ToDo: Back to numerics, show g(t) goes to 0 (for $\bar{v}=0$)
 	\end{itemize}
+	
 \end{frame}
 
 \begin{frame}{Analytical Progress}{Expansion}
 	\begin{itemize}
 		\item {
-			ToDo: Motivate small $\beta$
+			Since the previous results for finitely many birds or without noise are for $0 \leq \beta \leq 1/2$, perhaps we should investigate for small $\beta >0$.
 		}
 		\item {
-			Assume $\mu_0(x,v)$ is symmetric about some $(\bar x_0,\bar v_0)$
+			This motivates the use of an expansion in $\beta$ about $\beta=0$.
 		}
 		\item {
-			Show that without loss of generality, can assume $(\bar x_0,\bar v_0)=(0,0)$ (because can translate solution by $(t\bar v_0,\bar v_0))$
+			Again, the system we would like to solve is:
+			\begin{equation}
+			\partial_t \mu+v \partial_x \mu-v \partial_v \mu-\mu=-\phi (x,\mu)\partial_v \mu
+			\end{equation}
+			where
+			\begin{equation}
+			\phi (x,\mu)=\frac{\int_{\mathbb{R}^{2d}} \frac{v'}{(1+\Vert x'-x \Vert^2)^\beta}\mu(t,x',v')dx'dv'}{\int_{\mathbb{R}^{2d}} \frac{1}{(1+\Vert x'-x \Vert^2)^\beta}\mu(t,x',v')dx'dv}
+			\end{equation}
 		}
 	\end{itemize}
 \end{frame}
@@ -836,13 +921,62 @@
 \begin{frame}{Analytical Progress}{Expansion, continued}
 	\begin{itemize}
 		\item {
-			ToDo: Show expansion and 0th and 1st order systems.
+			We write the solution, $\mu(t,x,v)$ as an expansion in $\beta$:
+			\begin{equation}
+			\mu=\mu_0+\beta \mu_1+ \beta^2 \mu_2+...
+			\end{equation}
+		}
+		\item {
+			By substituting this expansion in $\phi(x,\mu)$, we have:
+					\begin{equation}
+					\begin{split}
+					\phi(x,\mu)=&\bar{v}_{\mu_1}(t) +\beta [ \bar{v}_{\mu_0}(t)+\bar{v}_{\mu_1}(t) \\
+					&-\int_{\mathbb{R}^2} v' log(1+(x-x')^2)\mu_0(t,x',v')dx'dv' ] + \mathcal{O}(\beta^2)
+					\end{split}
+					\end{equation}
+			where
+					\begin{equation}
+					\bar{v}_{\mu_k}(t)=\mathbb{E}^{\mu_k}(v_t)
+					\end{equation}
+		}
+
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Analytical Progress}{Expansion, continued}
+	\begin{itemize}
+		\item {
+			ToDo: first, show that $\bar{v}_{\mu_0}(t)=\mathbb{E}^{\mu_0}(v_t)=\bar{v}_0$
+		}
+		\item {
+			Substituting this expansion into Equation ? and collecting terms independent of $\beta$, we arrive at the 0'th order system:
+			\begin{equation}
+			\frac{\partial \mu_0}{\partial t}+v\frac{\partial \mu_0}{\partial x}-(v-\bar{v}_0)\frac{\partial \mu_0}{\partial v}-\mu_0-\frac{\sigma^2}{2}\frac{\partial^2 \mu_0}{\partial v^2}=0
+			\label{0th}
+			\end{equation}
+		}
+		\item {
+			Collecting terms of order $\beta$, we arrive at the 1st order correction system:
+			\begin{equation}
+			\begin{split}
+			&\frac{\partial \mu_1}{\partial t}+v\frac{\partial \mu_1}{\partial x}-(v-\bar{v}_0)\frac{\partial \mu_1}{\partial v}-\mu_1-\frac{\sigma^2}{2}\frac{\partial^2 \mu_1}{\partial v^2} \\
+			&=\left[-\bar{v}_0-{\color{red}\bar{v}_{\mu_1}(t)}+ \int v' log(1+(x-x')^2) d \mu_0(x',v') \right] \cdot \frac{\partial \mu_0}{\partial v}
+			\end{split}
+			\label{1st}
+			\end{equation}
 		}
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Analytical Progress}{Expansion Summary}
 	\begin{itemize}
+		\item {
+			Assume $\mu_0(x,v)$ is symmetric about some $(\bar x_0,\bar v_0)$
+		}
+		\item {
+			Show that without loss of generality, can assume $(\bar x_0,\bar v_0)=(0,0)$ (because can translate solution by $(t\bar v_0,\bar v_0))$
+		}
 		\item {
 			ToDo: Show general strategy for building solution
 		}
