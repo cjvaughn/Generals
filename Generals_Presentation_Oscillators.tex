@@ -46,10 +46,10 @@
 %\usetheme{Warsaw}
 \DeclareMathOperator*{\argmin}{arg\,min}
 
-\title{Numerical Solutions to Mean Field Games}
+\title{Synchronization of Circadian Oscillators}
 
 % A subtitle is optional and this may be deleted
-\subtitle{Models of Consensus}
+\subtitle{Mean Field Game Formulation}
 
 %\author{Christy Graves}
 \author[Christy Graves]{Christy Graves\\{\small Advisor: Ren\'{e} Carmona}}
@@ -106,6 +106,21 @@
 % and table of contents.
 \section{Introduction}
 %\frame{\tableofcontents[currentsection]}
+
+\begin{frame}{Circadian Oscillators}
+	\begin{itemize}
+		\item {
+			Cells in Suprachiasmatic Nucleus (SCN) responsible for circadian rhythm.
+		}
+		\item Order of $10^4$ neuronal cells.
+		\item Each cell exhibits oscillatory dynamics.
+		\item Each cell has a preferred frequency $\omega$ that varies from cell to cell.
+		\item $\mathbb{E}(\omega)=\frac{2\pi}{24.5}$
+		\item Cells want to synchronize with each other, as well any external sources (e.g. the sun).
+	\end{itemize}
+\end{frame}
+
+
 \begin{frame}{Brief Intro to MFG}{N player stochastic game}
 		$N$ players each make a decision (or control) $\alpha_t^i \in \mathbb{A}$ at time $t$ in an attempt to minimize their cost functions, $J^i$. For example:
 		\begin{equation}
@@ -147,19 +162,6 @@
 			}
 		\end{itemize}
 	\end{frame}
-
-
-
-\begin{frame}{Two Consensus Problems}
-	\begin{itemize}
-		\item {
-			Flocking: large number of birds reaching consensus on flocking velocity
-		}
-		\item {
-			Circadian Rhythm: large number of neuronal oscillators synchronizing with each other and external stimuli (e.g. the sun)
-		}
-	\end{itemize}
-\end{frame}
 
 \section{State of the Art}
 
@@ -324,214 +326,30 @@
 	\end{itemize}
 \end{frame}
 
-\subsection{Flocking: Previous Work}
+\subsection{Circadian Oscillators: Previous Work}
 
-\begin{frame}{State of the Art: Flocking}{Previous Work}
-	Cucker-Smale (CS)
-	\begin{equation}
-				\begin{split}
-				x'_i(t)&=v_i(t)\\
-				v'_i(t)&=\frac{1}{N}\sum_{j=1}^N\frac{v_j(t)-v_i(t)}{(1+\Vert x_j(t)-x_i(t) \Vert^2)^\beta}
-				\end{split}
-	\end{equation}
+\begin{frame}{State of the Art: Circadian Oscillators}{Previous Work: Lu, et. al.}
+\end{frame}
+
+\begin{frame}{State of the Art: Circadian Oscillators}{Previous Work: Yin, et. al.}
+\end{frame}
+
+\begin{frame}{State of the Art: Circadian Oscillators}{Open Problems}
 	\begin{itemize}
-		\item {
-			Unconditional flocking when $\beta < 1/2$.
-		}
-		\item {
-			When $\beta \geq 1/2$, flocking occurs for sufficiently small values of $\sum_{i \neq j}\Vert x_i(0)-x_j(0)\Vert^2$ and $\sum_{i \neq j}\Vert v_i(0)-v_j(0)\Vert^2$.
-		}
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{State of the Art: Flocking}{Aside on $\beta$ Parameter}
-	\begin{itemize}
-		\item {
-			My first point.
-		}
-		\item {
-			My second point.
-		}
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{State of the Art: Flocking}{Previous Work}
-	Kinetic CS (Ha and Tadmor)
-	\begin{itemize}
-		\item {
-			Mean field limit of CS.
-		}
-		\item {
-			PDE of McKean-Vlasov type:
-		}
-		\begin{equation}
-		\partial_t \mu_t+v \partial_x \mu_t+\partial_v \left[\xi (x,v,\mu_t) \mu_t \right]=0
-		\end{equation}
-		where
-		\begin{equation}
-		\xi (x,v,\mu_t)=\int_{\mathbb{R}^{2d}} \frac{v'-v}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv'
-		\end{equation}
-	\end{itemize}
-	Results
-	\begin{itemize}
-		\item For compactly supported $\mu_0(x,v)$, time-asymptotic flocking when $\beta \leq 1/4$ (later extended to $\beta \leq 1/2$ by Ha and Liu).
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{State of the Art: Flocking}{Previous Work}
-	Normalized Weights Kinetic CS (?)
-	\begin{itemize}
-		\item {
-			Normalize weights so that the control is a true weighted average of $v'-v$.
-		}
-		\item {
-			PDE of McKean-Vlasov type:
-		}
-		\begin{equation}
-		\partial_t \mu_t+v \partial_x \mu_t-v \partial_v \mu_t-\mu_t+\phi (x,\mu_t)\partial_v \mu_t=0
-		\end{equation}
-		where
-		\begin{equation}
-		\phi (x,\mu_t)=\frac{\int_{\mathbb{R}^{2d}} \frac{v'}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv'}{\int_{\mathbb{R}^{2d}} \frac{1}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv}
-		\end{equation}
-	\end{itemize}
-	Results???
-\end{frame}
-
-
-
-\begin{frame}{State of the Art: Flocking}{Previous Work}
-	Mean Field Game Analog of CS (Nourian, Caines, and Malhalm\'{e})
-				\begin{equation}
-				\begin{split}
-				dx_t&=v_tdt\\
-				dv_t&=\alpha_tdt+\sigma dW_t
-				\end{split}
-				\end{equation}
-				Where $\alpha$ is chosen to minimize:
-				\begin{equation}
-				\begin{split}
-				J(\alpha)&=\limsup_{T \rightarrow \infty} \frac{1}{T} \int_0^T \Psi(x_t,v_t,\mu_t)+\alpha_t^2 dt \\
-				\Psi(x,v,\mu_t)&=\Vert\int_{\mathbb{R}^{2d}}\frac{v'-v}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv' \Vert^2
-				\end{split}
-				\end{equation}
-	Results:
-	\begin{itemize}
-		\item {
-			Exact solution when $\beta=0$. (Linear Quadratic Game.)
-		}
-		\item {
-			As $t\rightarrow \infty$, $v \sim N(\bar{v}_0,\sigma^2/2)$
-		}
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{State of the Art: Flocking}{Previous Work Summary}
-	Finitely many birds, no optimization:
-	\begin{center}
-	\begin{tabular}{|c|c|c|}
-	 \hline
-	 Authors & Noise & Interaction Type  \\ \hline
-	 Cucker, Smale 2007& no & spatial weights \\ \hline
-	 Ha, Liu 2009& no&spatial weights \\ \hline
-	 Martin, Girard 2010 & no&unweighted $(\Vert x'-x\Vert^2 <R)$ \\ \hline
-	 Cucker, Dong 2010 & no&spatial weights \& repulsion \\ \hline
-	 Cucker, Mordecki 2008 & yes&spatial weights \\ \hline
-	 Ha, Lee, Levy 2009 & yes&spatial weights \\ \hline
-	 Ton, Linh, Yagi 2015 & yes& noisy spatial weights \\
-	 \hline
-	\end{tabular}
-	\end{center}
-\end{frame}
-
-\begin{frame}{State of the Art: Flocking}{Previous Work Summary}
-	Justification of Mean Field Limit (still no optimization):
-	\begin{center}
-		\begin{tabular}{|c|c|c|}
-			\hline
-			Authors & Noise & Result  \\ \hline
-			Ha, Tadmor 2008& no & flocking for initially compact data \\ \hline
-			Carrillo, et. al. 2010& no & exponentially fast flocking \\ \hline
-			Bolley, Ca\~nizo, Carrillo 2010 & yes& existence and uniqueness \\
-			\hline
-		\end{tabular}
-	\end{center}
-	All of these results are for the spatial weights.
-\end{frame}
-
-\begin{frame}{State of the Art: Flocking}{Previous Work Summary}
-	Mean field:
-	\begin{center}
-		\begin{tabular}{|c|c|c|}
-			\hline
-			Authors & Noise & Interaction Type  \\ \hline
-			Ca\~nizo, et. al. 2010& no & spatial weights \& A/R \\ \hline
-			Karper, et. al. 2013& yes & spatial weights \\
-			& & existence of weak solutions \\ \hline
-			Piccoli, et. al. 2015& no & spatial weights \& sparse external force \\ \hline
-			Barbaro, et. al. 2016& yes & normalized spatial weights \& A/R \\
-			& & results only for $\beta=0$ \\ \hline
-			Nourian, et. al. 2010 & yes& optimization (MFG), spatial weights \\
-			& & results only for $\beta=0$ \\
-			\hline
-		\end{tabular}
-	\end{center}
-\end{frame}
-
-\begin{frame}{State of the Art: Flocking}{Open Problems}
-	\begin{itemize}
-		\item {
-			Noisy Kinetic or MFG analog of CS Flocking when $\beta > 0$, with and without normalized spatial weights.
+		\item { No one has formulated the dynamics of oscillators as a mean field game in the presence of an external source.
 		}
 	\end{itemize}
 \end{frame}
 
 \section{My Progress}
 
-\subsection{Flocking Problem Formulation}
+\subsection{Problem Formulation}
 
-\begin{frame}{Flocking Problem Formulation}
-	\begin{itemize}
-		\item {
-			For now, consider the MFG formulation of Nourian et. al. but with finite horizon T.
-		}
-						\begin{equation}
-						\begin{split}
-						dx_t&=v_tdt\\
-						dv_t&=\alpha_tdt+\sigma dW_t
-						\end{split}
-						\end{equation}
-						Where $\alpha$ is chosen to minimize:
-						\begin{equation}
-						\begin{split}
-						J(\alpha)&=\mathbb{E} \int_0^T \Psi(x_t,v_t,\mu_t)+\alpha_t^2 dt \\
-						\Psi(x,v,\mu_t)&=\Vert\int_{\mathbb{R}^{2d}}\frac{v'-v}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv' \Vert^2
-						\end{split}
-						\end{equation}
-	\end{itemize}
+\begin{frame}{Problem Formulation}
+
 \end{frame}
 
-\begin{frame}{Flocking Problem Formulation}
-	\begin{itemize}
-		\item {
-			For now, consider the MFG formulation of Nourian et. al. but with finite horizon T.
-		}
-		\item {
-			The solution is given by the HJB and Kolmogorov equations:
-			\begin{equation}
-			\begin{split}
-			\partial_t V+\frac{\sigma^2}{2}\partial^2_{vv} V+ v \partial_x V+ \alpha \partial_v V+\alpha^2+\Psi(x,v,\mu)&=0 \\
-			V(T,x,v)&=0 \\
-			\partial_t \mu_t-\frac{\sigma^2}{2}\partial^2_{vv} \mu_t + v \partial_x \mu_t +div_v(\alpha_t \mu_t) &=0 \\
-			\mu(0,x,v)=\mu^0(x,v)& \\
-			\alpha=-\frac{1}{2}\partial_v V&
-			\end{split}
-			\end{equation}
-		}
-	\end{itemize}
-\end{frame}
-
-\subsection{Deriving Stable Scheme \& Boundary Conditions}
+\subsection{Numerical Approach}
 
 \begin{frame}{Numerical Approach}
 		\begin{itemize}
@@ -674,331 +492,36 @@
 		\end{split}
 		\end{equation}
 	\end{frame}
+	
+\begin{frame}{Numerical Approach}
+ToDo:
 
-\begin{frame}{Numerical Approach: Boundary Behavior}
-	\begin{itemize}
-		\item {
-			The domain of the original problem (in 1 dimension) is $\mathbb{R}^{2d}$. For numerics, we are restricted to a finite domain.
-		}
-		\item {
-			Let the domain of $v$ be $D_v =[-v_{max},v_{max}]$.
-			ToDo: less text
-			\begin{itemize}
-				\item If birds were 'killed' at the boundary, the total mass of the system would decrease in time, which is undesirable.
-				\item If the boundary was periodic, then birds that have a large positive velocity would be replaced by birds with a large negative velocity, which is unrealistic.
-				\item Intuitively, if a bird reaches a physical upper limit on it's velocity, it would have to decrease it's velocity. Thus, we choose reflecting boundary conditions at the boundary $\partial D_v$.
-				\item Nonetheless, $v_{max}$ will be chosen large enough such that only a small amount of the total mass can reach the boundary $\partial D_v$, limiting the effect of our choice of boundary condition for $\partial D_v$.
-			\end{itemize}
-		}
-	\end{itemize}
-\end{frame}
+describe the 3 step process:
+1) Start from $\mu$ uniform, $V(T)=0$
+2) Start from $\mu$ traveling wave from 1)
+3) Start from $\mu$ traveling wave from 1) and also with V(T) from 2)
 
-\begin{frame}{Numerical Approach: Boundary Behavior, continued}
-	\begin{itemize}
-		\item {
-			Let $R \in \mathbb{R}$ such that $x_0 \in [-R,R]$ for all birds. Then $x_t \in [-R-Ty_{ax},R+T y_{max}]$ $\forall t$.
-		}
-		\item {
-			Let the domain of $x$ be $D_x =[-R-Ty_{max}-\epsilon,R+T y_{max}+\epsilon]$. Then no birds will ever reach the boundary $\partial D_x$. Thus, the choice of boundary condition for $\partial D_x$ should not affect these results, and we can arbitrarily choose reflecting boundary conditions for $\partial D_x$.
-		}
-	\end{itemize}
-\end{frame}
 
-\begin{frame}{Numerical Approach: Boundary Conditions}
-	\begin{itemize}
-		\item {
-			Now that we have established boundary behavior, we need to establish boundary conditions for the HJB and Kolmogorov equations.
-		}
-		\item {
-			Reflecting on the boundaries corresponds to a von Neumann boundary condition for the HJB:
-			\begin{equation}
-			\begin{split}
-			\partial_v V(t,x,y_{min})&=0 \\
-			\partial_v V(t,x,y_{max})&=0 \\
-			\partial_x V(t,x_{min},y)&=0 \\
-			\partial_x V(t,x_{max},y)&=0
-			\end{split}
-			\end{equation}
-		}
-		\item {
-			We also need an approximation for $\partial^2_{vv} V(t,x,y)$ for $y=y_{min},y_{max}$.
-		}
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{Numerical Approach: Boundary Conditions, continued}
-	\begin{itemize}
-		\item {
-			By making the approximation $V(t,x,y_{min}-\Delta v) \approx V(t,x,y_{min}+\Delta v)$ (based on the von Neumann boundary), we can approximate:
-			\begin{equation}
-				\partial^2_{vv} V(t,x,y_{min})\approx \frac{2V(t,x,y_{min}+\Delta v)-2V(t,x,y_{min})}{\Delta v^2}
-			\end{equation}
-			and similarly for $y_{max}$.
-		}
-		\item {
-			Now, we have fully specified the discrete operator $L$ such that the finite difference HJB equation is given by:
-			\begin{equation}
-			\partial_t V+L[V]=0
-			\end{equation}
-		}
-		\item {
-			The boundary conditions for the finite difference Kolmogorov equation are already determined by our choice for $L$:
-			\begin{equation}
-			\partial_t \mu_t=L^*[\mu_t]
-			\end{equation}
-		}
-	\end{itemize}
+ToDo:
+Describe how to deal with eta and ergodic form of cost
 \end{frame}
 
 \subsection{Numerical Results}
 
-\begin{frame}{Numerical Results}{MFG of flocking, unnormalized weights}
+\begin{frame}{Numerical Results}
 	\begin{itemize}
 		\item {
-			ToDo: show variance increases with t for $\beta >0$.
+			My first point.
 		}
 		\item {
-			Lead into motivation for using normalized weights
+			My second point.
 		}
 	\end{itemize}
-\end{frame}
-
-\begin{frame}{Numerical Results}{MFG of flocking, normalized weights}
-	\begin{itemize}
-		\item {
-			ToDo: show variance decreases/stabilizes
-		}
-		\item {
-			Explain how the relationship of variance with $\beta$, $\lambda$, and $\sigma$ is not clear. To simplify the problem, let's return to the Kinetic-CS model. (Question: does variance increase for unnormalized Kinetic-CS? Not sure if I ever ran this.)
-		}
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{Numerical Results}{Kinetic-CS flocking, normalized weights}
-	\begin{itemize}
-		\item {
-			ToDo: show variance goes to $\sigma^2/2$.
-		}
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{Numerical Results}{Verifying Code}
-	\begin{itemize}
-		\item {
-			ToDo: search 'verify' in Notes
-		}
-		\item {
-			Mass is conserved. Mass is nonnegative. (Put in better wording and using equations)
-		}
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{Conjecture}
-	\begin{block}{Conjecture}
-		For $\mu_0(x,v)$ with compact support, the solution to noisy Kinetic Cucker-Smale flocking with normalized weights has the following time-asymptotic behavior:
-			\begin{equation}
-			\lim_{t \rightarrow \infty} Var(v_t)=\frac{\sigma^2}{2} 
-			\end{equation}
-			Or equivalently,
-			\begin{equation}
-			\lim_{t \rightarrow \infty} \mathbb{E}^{\mu_t}(v_t-\mathbb{E}^{\mu_t}v_t)^2=\frac{\sigma^2}{2}
-			\end{equation}
-	\end{block}
 \end{frame}
 
 \subsection{Analytical Progress}
 
-\begin{frame}{Analytical Progress}{Direct Calculation}
-	\begin{equation}
-		\begin{split}
-			dx_t&=v_tdt\\
-			dv_t&=(-v_t+\phi(x_t,\mu_t))dt+\sigma dW_t
-		\end{split}
-	\end{equation}
-	where
-	\begin{equation}
-		\phi (x,\mu_t)=\frac{\int_{\mathbb{R}^{2d}} \frac{v'}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv'}{\int_{\mathbb{R}^{2d}} \frac{1}{(1+\Vert x'-x \Vert^2)^\beta}\mu_t(x',v')dx'dv}
-	\end{equation}
-\end{frame}
-
-\begin{frame}{Analytical Progress}{Direct Calculation, continued}
-	\begin{equation}
-		dv_t=(-v_t+\phi(x_t,\mu_t))dt+\sigma dW_t
-	\end{equation}
-
-	By It\^{o},
-		\begin{equation}
-		\begin{split}
-			dv_t^2&=(2v_t(-v_t+\phi(x_t,\mu_t))+\sigma^2)dt+2\sigma v_t dW_t \\
-			\mathbb{E}v_t^2&=\mathbb{E}v_0^2-2\int_0^t \mathbb{E}v_s^2dw+2\int_0^t \mathbb{E}(v_s \phi(x_s,\mu_s))ds+t\sigma^2 \
-		\end{split}
-		\end{equation}
-	Let $f(t)=\mathbb{E}v_t^2$ and let $g(t)=\mathbb{E}(v_t \phi(x_t,\mu_t))$.
-	
-	Then,
-	\begin{equation}
-	f(t)=f(0)-2 \int_0^t f(s)ds+2\int_0^t g(s)ds + t \sigma^2
-	\end{equation}
-\end{frame}
-
-\begin{frame}{Analytical Progress}{Direct Calculation, continued}
-	\begin{equation}
-	f(t)=f(0)-2 \int_0^t f(s)ds+2\int_0^t g(s)ds + t \sigma^2
-	\end{equation}
-	Assuming $f(t)$ is differentiable,
-	\begin{equation}
-	f'(t)=-2f(t)+2g(t)+\sigma^2
-	\end{equation}
-	By integrating factor method,
-	\begin{equation}
-	f(t)=\frac{\sigma^2}{2}+\left(f(0)-\frac{\sigma^2}{2}\right)e^{-2t}+2e^{2t}\int_0^te^{-2s}g(s)ds
-	\end{equation}
-\end{frame}
-
-\begin{frame}{Analytical Progress}{Direct Calculation, continued}
-	\begin{equation}
-	f(t)=\frac{\sigma^2}{2}+\left(f(0)-\frac{\sigma^2}{2}\right)e^{-2t}+2e^{2t}\int_0^te^{-2s}g(s)ds
-	\end{equation}
-	\begin{block}{Hypothesis}
-	Suppose $g(t)$ is bounded and $\lim_{t \rightarrow \infty}g(t) =\bar{v}^2:=(\lim_{t \rightarrow \infty} \mathbb{E}v_t)^2$.
-	\end{block}
-	Then $\forall \epsilon$, $\exists T$ and $\exists M$ such that $|g(s)-\bar{v}^2|<\epsilon,$ $s>T$ and $|g(s)|<M,$ $0 \leq s \leq T$.
-	Then for $t>T$,
-		\begin{equation}
-		\begin{split}
-		f(t)\leq& \frac{\sigma^2}{2}+\left(f(0)-\frac{\sigma^2}{2}\right)e^{-2t}+M e^{-2(t-T)}-M e^{-2t} \\
-		&-(\bar{v}^2+\epsilon) e^{-2(t-T)}+(\bar{v}^2+\epsilon)
-		\end{split}
-		\end{equation}
-\end{frame}
-
-\begin{frame}{Analytical Progress}{Direct Calculation, continued}
-	\begin{equation}
-	\lim_{t \rightarrow \infty}f(t)\leq \frac{\sigma^2}{2}+\bar{v}^2+\epsilon
-	\end{equation}
-	Similarly,
-	\begin{equation}
-	\lim_{t \rightarrow \infty}f(t)\geq \frac{\sigma^2}{2}+\bar{v}^2-\epsilon
-	\end{equation}
-	Thus,
-	\begin{equation}
-	\begin{split}
-	\lim_{t \rightarrow \infty} \mathbb{E}v_t^2&=\frac{\sigma^2}{2}+\bar{v}^2 \\
-	\lim_{t \rightarrow \infty} Var(v_t)&=\frac{\sigma^2}{2}
-	\end{split}
-	\end{equation}
-\end{frame}
-
-\begin{frame}{Analytical Progress}{Back to Numerics}
-	\begin{itemize}
-		\item It remains to show that the hypothesis is true.
-		\item ToDo: Back to numerics, show g(t) goes to 0 (for $\bar{v}=0$)
-	\end{itemize}
-	
-\end{frame}
-
-\begin{frame}{Analytical Progress}{Expansion}
-	\begin{itemize}
-		\item {
-			Since the previous results for finitely many birds or without noise are for $0 \leq \beta \leq 1/2$, perhaps we should investigate for small $\beta >0$.
-		}
-		\item {
-			This motivates the use of an expansion in $\beta$ about $\beta=0$.
-		}
-		\item {
-			Again, the system we would like to solve is:
-			\begin{equation}
-			\partial_t \mu+v \partial_x \mu-v \partial_v \mu-\mu=-\phi (x,\mu)\partial_v \mu
-			\end{equation}
-			where
-			\begin{equation}
-			\phi (x,\mu)=\frac{\int_{\mathbb{R}^{2d}} \frac{v'}{(1+\Vert x'-x \Vert^2)^\beta}\mu(t,x',v')dx'dv'}{\int_{\mathbb{R}^{2d}} \frac{1}{(1+\Vert x'-x \Vert^2)^\beta}\mu(t,x',v')dx'dv}
-			\end{equation}
-		}
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{Analytical Progress}{Expansion, continued}
-	\begin{itemize}
-		\item {
-			We write the solution, $\mu(t,x,v)$ as an expansion in $\beta$:
-			\begin{equation}
-			\mu=\mu_0+\beta \mu_1+ \beta^2 \mu_2+...
-			\end{equation}
-		}
-		\item {
-			By substituting this expansion in $\phi(x,\mu)$, we have:
-					\begin{equation}
-					\begin{split}
-					\phi(x,\mu)=&\bar{v}_{\mu_1}(t) +\beta [ \bar{v}_{\mu_0}(t)+\bar{v}_{\mu_1}(t) \\
-					&-\int_{\mathbb{R}^2} v' log(1+(x-x')^2)\mu_0(t,x',v')dx'dv' ] + \mathcal{O}(\beta^2)
-					\end{split}
-					\end{equation}
-			where
-					\begin{equation}
-					\bar{v}_{\mu_k}(t)=\mathbb{E}^{\mu_k}(v_t)
-					\end{equation}
-		}
-
-	\end{itemize}
-
-\end{frame}
-
-\begin{frame}{Analytical Progress}{Expansion, continued}
-	\begin{itemize}
-		\item {
-			ToDo: first, show that $\bar{v}_{\mu_0}(t)=\mathbb{E}^{\mu_0}(v_t)=\bar{v}_0$
-		}
-		\item {
-			Substituting this expansion into Equation ? and collecting terms independent of $\beta$, we arrive at the 0'th order system:
-			\begin{equation}
-			\frac{\partial \mu_0}{\partial t}+v\frac{\partial \mu_0}{\partial x}-(v-\bar{v}_0)\frac{\partial \mu_0}{\partial v}-\mu_0-\frac{\sigma^2}{2}\frac{\partial^2 \mu_0}{\partial v^2}=0
-			\label{0th}
-			\end{equation}
-		}
-		\item {
-			Collecting terms of order $\beta$, we arrive at the 1st order correction system:
-			\begin{equation}
-			\begin{split}
-			&\frac{\partial \mu_1}{\partial t}+v\frac{\partial \mu_1}{\partial x}-(v-\bar{v}_0)\frac{\partial \mu_1}{\partial v}-\mu_1-\frac{\sigma^2}{2}\frac{\partial^2 \mu_1}{\partial v^2} \\
-			&=\left[-\bar{v}_0-{\color{red}\bar{v}_{\mu_1}(t)}+ \int v' log(1+(x-x')^2) d \mu_0(x',v') \right] \cdot \frac{\partial \mu_0}{\partial v}
-			\end{split}
-			\label{1st}
-			\end{equation}
-		}
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{Analytical Progress}{Expansion Summary}
-	\begin{itemize}
-		\item {
-			Assume $\mu_0(x,v)$ is symmetric about some $(\bar x_0,\bar v_0)$
-		}
-		\item {
-			Show that without loss of generality, can assume $(\bar x_0,\bar v_0)=(0,0)$ (because can translate solution by $(t\bar v_0,\bar v_0))$
-		}
-		\item {
-			ToDo: Show general strategy for building solution
-		}
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{Analytical Progress}{Expansion: General Initial Condition}
-	\begin{itemize}
-		\item {
-			ToDo: Show problem term that keeps us from using the approach from before
-		}
-	\end{itemize}
-\end{frame}
-
-
-\section{Future Directions}
-
-\subsection{Numerics}
-
-\subsection{Ideas for Proving Conjecture}
-
-\begin{frame}{Future Directions}{Ideas for Proving Conjecture}
+\begin{frame}{Analytical Progress}
 	\begin{itemize}
 		\item {
 			My first point.
@@ -1009,7 +532,9 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Future Directions}{Numerics}
+
+\section{Next Steps}
+\begin{frame}{Next Steps: Numerics}
 	\begin{itemize}
 		\item {
 			My first point.
@@ -1020,9 +545,7 @@
 	\end{itemize}
 \end{frame}
 
-\subsection{New Problem: Circadian Oscillators}
-
-\begin{frame}{Future Directions}{New Problem: Circadian Oscillators}
+\begin{frame}{Next Steps: Analytically}
 	\begin{itemize}
 		\item {
 			My first point.
