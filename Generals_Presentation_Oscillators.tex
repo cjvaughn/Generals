@@ -11,6 +11,7 @@
 % notice. 
 
 \documentclass{beamer}
+\usepackage{graphicx}
 
 % There are many different themes available for Beamer. A comprehensive
 % list with examples is given here:
@@ -120,54 +121,11 @@
 	\end{itemize}
 \end{frame}
 
-
-\begin{frame}{Brief Intro to MFG}{N player stochastic game}
-		$N$ players each make a decision (or control) $\alpha_t^i \in \mathbb{A}$ at time $t$ in an attempt to minimize their cost functions, $J^i$. For example:
-		\begin{equation}
-		\begin{split}
-		J^i(\alpha^i,X^{1,\alpha},...X^{N,\alpha})=&\mathbb{E}\Bigg[\int_{0}^{T}f^i(t,\alpha_t^i,X_t^{1,\alpha},...X_t^{N,\alpha})dt \\
-		&+g^i(X_T^{1,\alpha},...X_T^{N,\alpha}) \Bigg]
-		\end{split}
-		\end{equation}
-		where $X_t^{i,\alpha}$ is the state of player $i$ at time $t$, given by:
-		\begin{equation}
-		dX_t^i=b(t,\alpha_t^i,X_t^{i,\alpha},\bar{\mu}_t)dt+\sigma(t,\alpha_t^i,X_t^{i,\alpha},\bar{\mu}_t)dW_t
-		\end{equation}
-		and $f^i$ and $g^i$ are the running costs and terminal costs, respectively.
-\end{frame}
-
-	\begin{frame}{Brief Intro to MFG}{Moving to Mean Field}
-		\begin{itemize}
-			\item {
-				Assume players are symmetric.
-			}
-			\item {
-				Consider the limit $N \rightarrow \infty$ and consider the mean field game.
-		    }
-			\item {
-				Generic player has control $\alpha_t \in \mathbb{A}$ and state $X_t^{\alpha}$.
-			}
-			\item {
-				Distribution of players' states over time: $\mu=(\mu_t)_{0 \leq t \leq T}$.
-			}
-			\item {
-				Cost for generic player:
-				\begin{equation}
-				J(\alpha,X^{\alpha},\mu)=\mathbb{E}\Bigg[\int_{0}^{T}f(t,\alpha_t,X_t^{\alpha},\mu_t)dt+g(X_T^{\alpha},\mu_T) \Bigg]
-				\end{equation}
-			}
-			\pause
-			\item {
-				Goal: find analog to Nash equilibrium
-			}
-		\end{itemize}
-	\end{frame}
-
 \section{State of the Art}
 
 \subsection{Mean Field Games}
 
-\begin{frame}{State of the Art: Mean Field Games}{Analytic Approach}
+\begin{frame}{State of the Art: Mean Field Games}
 	Strategy:
 	\begin{itemize}
 				\item {
@@ -178,94 +136,6 @@
 				}
 				\item {
 					Find fixed point: $\mu$ s.t. $\mathcal{L}(X_t^{\alpha^{\mu}})=\mu_t$
-				}
-	\end{itemize}
-\end{frame}
-		
-\begin{frame}{State of the Art: Mean Field Games}{Analytic Approach: Stochastic Control Problem}
-	\begin{itemize}
-				\item {
-					Define the value function:
-					\begin{equation}
-					\begin{split}
-					V(t,x)=\inf_{\alpha \in \mathbb{A}}\mathbb{E}&\Bigg[\int_{t}^{T}f(s,\alpha_s,X_s^{\alpha},\mu_s)ds \\
-					&+g(X_T^{\alpha},\mu_T) \mid X_t = x \Bigg]
-					\end{split}
-					\end{equation}
-				}
-			\end{itemize}
-\end{frame}
-		
-\begin{frame}{State of the Art: Mean Field Games}{Analytic Approach: Stochastic Control Problem: HJB Equation}
-	\begin{itemize}
-				\item {
-					The value function satisfies the HJB equation:
-					\begin{block}{Hamilton Jacobi Bellman Equation}
-						\begin{equation}
-						\begin{split}
-						\partial_tV(t,x)+ H(t,x, \mu_t,\partial_x V,\hat{\alpha}(t,x,\mu_t, \partial_x V))&=0 \\
-						V(T,x)&=g(x,\mu_T)
-						\end{split}
-						\end{equation}
-					\end{block}
-					where  $H$ is the Hamiltonian, and $\hat{\alpha}$ is chosen to minimize the Hamiltonian.
-				}
-				\item {
-					Derivation from the dynamic programming principle and It\^{o}'s formula
-				}
-			\end{itemize}
-\end{frame}
-		
-\begin{frame}{State of the Art: Mean Field Games}{Analytic Approach: Kolmogorov (or Fokker-Planck) Equation}
-	\begin{itemize}
-				\item {
-					Solving HJB gives us an optimal control: $\alpha(t,x)$.
-				}
-				\item {
-					If all players use the optimal control, what is $\mathcal{L}(X_t^{\alpha})=:\mu_t$?
-				}
-				\item {
-					This is given by the Kolmogorov (or Fokker-Planck) equation:
-					\begin{block}{Kolmogorov Equation}
-						\begin{equation}
-						\begin{split}
-						\partial_t \mu_t-\frac{1}{2} trace(\sigma \sigma^T \partial_{xx}^2 \mu_t)& \\
-						+ div(b(t,x, \mu_t,\hat{\alpha}(t,x,\mu_t, \partial_x V))\cdot \mu_t)&=0 \\
-						\mu_0&= \mu^0   
-						\end{split}
-						\end{equation}
-					\end{block}
-				}
-				\item {
-					Derivation from It\^{o}'s formula and integration by parts
-				}
-			\end{itemize}
-\end{frame}
-		
-\begin{frame}{State of the Art: Mean Field Games}{Analytic Approach: Strategy Summary}
-	\begin{itemize}
-				\item {
-					Goal: find $V, \mu$ solving HJB and Kolmogorov.
-				}
-				\item {
-					Step 0: start with some guess for $\mu=(\mu_t)_{0 \leq t \leq T}$
-				}
-				\item {
-					Step 1: Given $\mu$ and $V(T,x)$, solve HJB for $V$, which gives us optimal $\alpha$.
-				}
-				\item {
-					Step 2: Given $\alpha$ and $\mu^0$, solve Kolmogorov for $\mu '$.
-				}
-				\item {
-					Repeat Steps 1 and 2 until $\mu = \mu '$.
-				}
-				\pause
-				\item {
-					Note: existence, uniqueness, or convergence are not guaranteed. In general, need convexity of $\mathbb{A}$, $f$, and $g$.
-				}
-				\pause
-				\item {
-					Another note: this system of PDEs is highly coupled, nonlinear, with one PDE in the forward direction and the other in the backward direction.
 				}
 	\end{itemize}
 \end{frame}
@@ -328,15 +198,120 @@
 
 \subsection{Circadian Oscillators: Previous Work}
 
+\begin{frame}{State of the Art: Circadian Oscillators}{Previous Work}
+	Two groups:
+	\begin{itemize}
+		\item Lu, Carde\~na, Lee, Antonsen, Girvan, \& Ott at University of Maryland College Park, \textit{Resynchronization of circadian oscillators and the east-west asymmetry of jet-lag}, 2016
+		\item Yin, Mehta, Meyn, \& Shanbhag at University of Illinois at Urbana-Champaign, \textit{Synchronization of coupled oscillators is a game}, 2012
+	\end{itemize}
+\end{frame}
+
 \begin{frame}{State of the Art: Circadian Oscillators}{Previous Work: Lu, et. al.}
+	\begin{itemize}
+		\item Large number of oscillators following Kuramoto model:
+		\begin{equation}
+		\frac{d\theta_i}{dt}=\omega_i+\frac{K}{N} \sum_{i=1}^N \sin(\theta_j-\theta_i)+F \sin (\omega_S t+p(t)-\theta_i)
+		\end{equation}
+		\item Define order parameter, $z(t)$:
+		\begin{equation}
+		z(t)=\frac{1}{N}\sum_{i=1}^N e^{i[\theta_i(t)-\omega_St-p(t)]}
+		\end{equation}
+		\item Then assuming $\omega_i \sim$ Cauchy$(\omega_0,\Delta)$, then $z$ satisfies:
+		\begin{equation}
+		\dot{z}=\frac{1}{2} \left[(Kz+F)-z^2 (Kz+F)^* \right]- (\Delta+i(\omega_S-\omega_0))z
+		\end{equation}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{State of the Art: Circadian Oscillators}{Previous Work: Lu, et. al., continued}
+	\begin{itemize}
+		\item An individual is entrained to their local time zone if $z$ is at a stable fixed point.
+		\item Changing your time zone corresponds to a rotation of z by $\Delta p=p_1-p_2$.
+		\item The time to return to the stable fixed point can be identified as the time to recover from jet-lag.
+		\item The authors were interested in understanding the East-West asymmetry of jet-lag.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{State of the Art: Circadian Oscillators}{Previous Work: Lu, et. al., Main Results}
+	\begin{center}
+	\includegraphics[scale=0.2]{Lu_1}
+	\end{center}
+	Taken from Lu, et. al.
+\end{frame}
+
+\begin{frame}{State of the Art: Circadian Oscillators}{Previous Work: Lu, et. al., Main Results}
+	\begin{center}
+		\includegraphics[scale=0.25]{Lu_2}
+	\end{center}
+	Taken from Lu, et. al.
+\end{frame}
+
+\begin{frame}{State of the Art: Circadian Oscillators}{Previous Work: Lu, et. al., Summary}
+	\begin{itemize}
+		\item East-West asymmetry of jetlag explained by $\omega_0<\frac{2 \pi}{24}=\omega_S$
+		\item Oscillators are not solving an optimization problem.
+	\end{itemize}
 \end{frame}
 
 \begin{frame}{State of the Art: Circadian Oscillators}{Previous Work: Yin, et. al.}
+		Each oscillator evolves it's phase according to:
+		\begin{equation}
+			d\theta_t=(\omega_0+\alpha)dt+\sigma dW_t
+		\end{equation}
+		where $\alpha(t)$ is chosen to minimize the long run average (LRA) cost:
+		\begin{equation}
+		\eta=\limsup_{T \rightarrow \infty} \frac{1}{T}\int_0^T \left(\frac{R}{2} \alpha^2+\bar{c}(t,\theta,\mu_t) \right) dt
+		\end{equation}
+		where
+		\begin{equation}
+		\bar{c}(t,\theta,\mu_t)=\int_0^{2\pi}\frac{1}{2}\sin^2\left(\frac{\theta-\theta'}{2}\right) d\mu_t(\theta')
+		\end{equation}
+\end{frame}
+
+\begin{frame}{State of the Art: Circadian Oscillators}{Previous Work: Yin, et. al., continued}
+	Let $\eta^*$ be the ergodic average cost:
+	\begin{equation}
+	\eta^*=\lim_{T \rightarrow \infty} \frac{1}{T} \int_0^T \int_0^{2\pi} \left[\frac{1}{2R}(\partial_\theta V)^2+\bar{c}(t,\theta,\mu(t,\cdot))+c_{sun}(t,\theta) \right] d\mu(t,\theta)
+	\end{equation}
+	
+	The solution is given by the HJB and Kolmogorov equations:
+	
+	\begin{equation}
+	\partial_t V+\omega \partial_\theta V=-\frac{\sigma^2}{2}\partial_{\theta \theta}^2 V+\eta^*+\frac{1}{2R}(\partial_\theta V)^2-\bar{c}(t,\theta,\mu(t,\cdot))-c_{sun}(t,\theta)
+	\label{HJB}
+	\end{equation}
+	
+	\begin{equation}
+	\partial_t \mu+\omega \partial_{\theta} \mu= \frac{1}{R} \partial_{\theta}\left[\mu(\partial_\theta V) \right]+ \frac{\sigma^2}{2} \partial_{\theta \theta}^2 \mu
+	\label{Kolmogorov}
+	\end{equation}
+\end{frame}
+
+\begin{frame}{State of the Art: Circadian Oscillators}{Previous Work: Yin, et. al., continued}
+Look for two types of solutions:
+\begin{itemize}
+	\item Time independent: incoherence solution
+	\begin{equation}
+	\begin{split}
+		V(t,\theta)&=0 \\
+		\mu(t,\theta)&=\frac{1}{2\pi}
+	\end{split}
+	\end{equation}
+	\item Time-periodic solutions: traveling waves
+\end{itemize}
+\end{frame}
+
+\begin{frame}{State of the Art: Circadian Oscillators}{Previous Work: Yin, et. al., Main Results}
+	\begin{itemize}
+		\item Analysis of linearization of perturbation about the incoherence solution.
+		\item For $R>R_c$, the incoherence solution is linearly asymptotically stable.
+		\item From $R=R_c$ bifurcates a family of (non-constant) traveling wave solutions.
+	\end{itemize}
 \end{frame}
 
 \begin{frame}{State of the Art: Circadian Oscillators}{Open Problems}
 	\begin{itemize}
-		\item { No one has formulated the dynamics of oscillators as a mean field game in the presence of an external source.
+		\item { Mean field game formulation for the synchronization of circadian oscillators in the presence of an external source.
 		}
 	\end{itemize}
 \end{frame}
@@ -346,42 +321,47 @@
 \subsection{Problem Formulation}
 
 \begin{frame}{Problem Formulation}
+		Each oscillator evolves it's phase according to:
+		\begin{equation}
+		d\theta_t=(\omega_0+\alpha_t)dt+\sigma dW_t
+		\end{equation}
+		where $\alpha_t$ is chosen to minimize the long run average (LRA) cost:
+		\begin{equation}
+		\eta=\limsup_{T \rightarrow \infty} \frac{1}{T}\int_0^T \left(\frac{R}{2} \alpha_t^2+\bar{c}(t,\theta,\mu_t)+c_{sun}(t,\theta_t) \right) dt
+		\end{equation}
+		where
+		\begin{equation}
+		\bar{c}(t,\theta,\mu_t)=\int_0^{2\pi}\frac{1}{2}\sin^2\left(\frac{\theta-\theta'}{2}\right) d\mu_t(\theta')
+		\end{equation}
+		and
+		\begin{equation}
+		c_{sun}(t,\theta)=\frac{F}{2}\sin^2\left(\frac{\omega_St-\theta}{2}\right)
+		\end{equation}
+\end{frame}
 
+\begin{frame}{PDEs}
+	Let $\eta^*$ be the ergodic average cost:
+	\begin{equation}
+	\eta^*=\lim_{T \rightarrow \infty} \frac{1}{T} \int_0^T \int_0^{2\pi} \left[\frac{1}{2R}(\partial_\theta V)^2+\bar{c}(t,\theta,\mu(t,\cdot))+c_{sun}(t,\theta) \right] d\mu(t,\theta)
+	\end{equation}
+	
+	The solution is given by the HJB and Kolmogorov equations:
+	
+	\begin{equation}
+	\partial_t V+\omega \partial_\theta V=-\frac{\sigma^2}{2}\partial_{\theta \theta}^2 V+\eta^*+\frac{1}{2R}(\partial_\theta V)^2-\bar{c}(t,\theta,\mu(t,\cdot))-c_{sun}(t,\theta)
+	\label{HJB}
+	\end{equation}
+	
+	\begin{equation}
+	\partial_t \mu+\omega \partial_{\theta} \mu= \frac{1}{R} \partial_{\theta}\left[\mu(\partial_\theta V) \right]+ \frac{\sigma^2}{2} \partial_{\theta \theta}^2 \mu
+	\label{Kolmogorov}
+	\end{equation}
 \end{frame}
 
 \subsection{Numerical Approach}
 
 \begin{frame}{Numerical Approach}
-		\begin{itemize}
-			\item {
-				To solve numerically, one common method is finite differences.
-			}
-			\item {
-				The unknown function, $f$, will be approximated on a lattice of points:
-				\begin{equation}
-				f(t_i,x_j) \approx f(i \cdot \Delta t,j \cdot \Delta x)
-				\end{equation}
-			}
-			\item {
-				All derivatives are replaced by finite differences.
-			}
-			\item {
-				For example, the heat equation:
-				\begin{equation}
-				\partial_t f= \partial_{xx}^2 f
-				\end{equation}
-			}
-			\item {
-				becomes:
-				\begin{equation}
-				\frac{f(t_{i+1},x)-f(t_i,x)}{\Delta t}=\frac{f(t_i,x_{j+1})-2f(t_i,x_j)+f(t_i,x_{j-1})}{\Delta x^2}
-				\end{equation}
-			}
-		\end{itemize}
-\end{frame}
-
-\begin{frame}{Numerical Approach, continued}
-	Following the analytic approach, our numerical approach is the following:
+	Discretize the problem using finite differences.
 	\begin{itemize}
 			\item {
 				Goal: find grid functions $V(t_k,x_i,v_j)$ and $\mu_{t_k}(x_i,v_j)$ solving finite difference equations for HJB and Kolmogorov.
@@ -401,28 +381,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Numerical Approach: Complications}
-		\begin{itemize}
-			\item {
-				Curse of dimensionality: number of lattice points grows exponentially with the dimension of the state space.
-				
-			}
-			\item {
-				Stability: $\Delta t$ can't be too big (CFL condition).
-				\begin{center}
-					$\Delta x$ smaller and b (drift) larger $\implies$ need smaller $\Delta t$.
-				\end{center}
-			}
-			\item {
-				Accuracy: use upwind scheme for 1st order spatial derivatives
-			}
-			\item {
-				What boundary conditions should be used?
-			}
-		\end{itemize}
-\end{frame}
-
-	\begin{frame}{Numerical Approach: Stability and Accuracy}
+\begin{frame}{Numerical Approach: Stability and Accuracy}
 		\begin{itemize}
 			\item CFL condition:
 			\begin{equation} 
@@ -442,25 +401,9 @@
 			\end{enumerate}
 			
 		\end{itemize}
-	\end{frame}
+\end{frame}
 	
-	\begin{frame}{Numerical Approach: Upwind Scheme}
-		For example:
-		\begin{equation}
-		\left[b \cdot \frac{\partial f}{\partial x} \right](x_i)=b^{+} \cdot \frac{f(x_{i+1})-f(x_i)}{\Delta x}-b^{-} \cdot \frac{f(x_{i})-f(x_{i-1})}{\Delta x}
-		\end{equation}
-		\begin{equation}
-		L(i,i+1)=b^{+} \cdot \frac{1}{\Delta x} \geq 0
-		\end{equation}
-		\begin{equation}
-		L(i,i-1)=-b^{-} \cdot \frac{-1}{\Delta x} \geq 0
-		\end{equation}
-		\begin{equation}
-		L(i,i)=b^{+} \cdot \frac{-1}{\Delta x}-b^{-} \cdot \frac{1}{\Delta x} = -[L(i,i+1)+L(i,i-1)]
-		\end{equation}
-	\end{frame}
-	
-	\begin{frame}{Numerical Approach: Stability of $\mu$}
+\begin{frame}{Numerical Approach: Stability of $\mu$}
 		\begin{itemize}
 			\item CFL + Upwind $\rightarrow$ Solution to Kolmogorov is a prob. measure, i.e.
 			\begin{equation}
@@ -481,9 +424,9 @@
 			\end{equation}
 			$\mu(t_{n+1},x_i) \geq 0$ if $\Delta t \cdot| L(i,i)| \leq 1$ (CFL Condition)
 		\end{itemize}
-	\end{frame}
+\end{frame}
 	
-	\begin{frame}{Numerical Approach: Stability of $\mu$ (continued)}
+\begin{frame}{Numerical Approach: Stability of $\mu$ (continued)}
 		\begin{equation}
 		\begin{split}
 		\sum_i \mu(t_{n+1},x_i)=& \sum_i \mu(t_{n},x_i)+\Delta t \cdot \sum_i \sum_{j} L(j,i) \mu(t_n,x_j) \\
@@ -491,7 +434,7 @@
 		& = 1
 		\end{split}
 		\end{equation}
-	\end{frame}
+\end{frame}
 	
 \begin{frame}{Numerical Approach}
 ToDo:
@@ -508,7 +451,42 @@ Describe how to deal with eta and ergodic form of cost
 
 \subsection{Numerical Results}
 
-\begin{frame}{Numerical Results}
+\begin{frame}{Numerical Results}{Traveling Waves}
+	\begin{itemize}
+		\item {
+			My first point.
+		}
+		\item {
+			My second point.
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Numerical Results}{Re-synchronization After Travel}
+	\begin{itemize}
+		\item {
+			My first point.
+		}
+		\item {
+			My second point.
+		}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Numerical Results}{East versus West}
+	\begin{itemize}
+		\item {
+			My first point.
+		}
+		\item {
+			My second point.
+		}
+	\end{itemize}
+\end{frame}
+
+\subsection{Comparison with Previous Work}
+
+\begin{frame}{Comparison with Previous Work}
 	\begin{itemize}
 		\item {
 			My first point.
@@ -568,6 +546,13 @@ Describe how to deal with eta and ergodic form of cost
 			My second point.
 		}
 	\end{itemize}
+\end{frame}
+
+\section*{Questions}
+\begin{frame}{Questions?}
+	\begin{center}
+		Thanks for listening! Any questions?
+	\end{center}
 \end{frame}
 
 \end{document}
